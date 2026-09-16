@@ -6,35 +6,54 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>محاكي مسيرة لاعب كرة القدم الواقعي | Football Career Simulator</title>
+  <title>محاكي مسيرة كرة القدم المتطور | Football Career Simulator Pro</title>
   
-  <!-- Modern Arabic & Sports Fonts -->
+  <!-- Modern Arabic & Sports Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css?v=3.0" />
+  <link rel="stylesheet" href="styles.css?v=4.0" />
 </head>
 <body>
-  <!-- Ambient Audio & Language Controls -->
+  <!-- Top Floating System Bar (Mode Switcher, Level/XP, Leaderboard, Trophy Cabinet, Lang & Sound) -->
   <div class="top-floating-controls">
-    <button class="control-btn" id="trophyCabinetBtn" title="خزانة البطولات المحققة / Trophy Cabinet">
+    <!-- Level & XP Widget -->
+    <div class="xp-level-widget" id="xpLevelWidget" title="مستواك ونقاط الخبرة">
+      <div class="level-badge" id="playerLevelBadge">LVL 1</div>
+      <div class="xp-track">
+        <div class="xp-fill" id="xpFillBar" style="width: 25%;"></div>
+      </div>
+      <span class="xp-text" id="xpTextDisplay">25/100 XP</span>
+    </div>
+
+    <!-- Leaderboard Button -->
+    <button class="control-btn" id="leaderboardBtn" title="لوحة الشرف العالمية / Global Leaderboard">
+      <span>👑</span>
+    </button>
+
+    <!-- Trophy Cabinet Button -->
+    <button class="control-btn" id="trophyCabinetBtn" title="خزانة البطولات / Trophy Cabinet">
       <span>🏆</span>
       <span class="btn-badge" id="trophyBadgeCount">0</span>
     </button>
+
+    <!-- Language Toggle -->
     <button class="control-btn" id="langToggleBtn" title="تغيير اللغة / Switch Language">
       <span id="langLabel">EN</span>
     </button>
+
+    <!-- Audio Toggle -->
     <button class="control-btn" id="audioToggleBtn" title="تشغيل / كتم الصوت">
       <span id="audioIcon">🔊</span>
     </button>
   </div>
 
   <div class="app-viewport">
-    <!-- Camera/Filter Phone Frame Container -->
+    <!-- Filter Frame Simulator Container -->
     <div class="simulator-frame">
       
-      <!-- Top Bar: Filter Header & Version -->
+      <!-- Top Navigation & Mode Selector Bar -->
       <header class="top-nav-bar">
         <div class="top-left-badge">
           <div class="avatar-letter">A</div>
@@ -48,19 +67,34 @@
           </div>
         </div>
 
-        <div class="version-pill">v2.0 PRO</div>
+        <!-- Mode Switcher Tabs (Player Career vs Manager Career) -->
+        <div class="mode-switcher-bar">
+          <button class="mode-tab active" id="tabPlayerMode">
+            <span>👟 طور اللاعب</span>
+          </button>
+          <button class="mode-tab" id="tabManagerMode">
+            <span>👔 طور المدرب</span>
+          </button>
+        </div>
 
         <div class="top-right-actions">
           <button class="icon-btn" id="restartGameBtn" title="بدء مسيرة جديدة">🔄</button>
         </div>
       </header>
 
-      <!-- Main Filter Stage: Left Ladder + Right Main Column -->
-      <main class="filter-stage">
+      <!-- AI Live Evolution Status Pill -->
+      <div class="ai-status-strip">
+        <span class="ai-pulse-dot"></span>
+        <span class="ai-status-text" id="aiStatusText">🧠 ذكاء اصطناعي تكيفي: جيل 4 • يتعلم من 142 مسيرة</span>
+      </div>
+
+      <!-- MAIN STAGE (TWO PARALLEL COLUMNS) -->
+      <main class="filter-stage" id="mainFilterStage">
         
-        <!-- Left Column: Timeline Ladder with Age + Club Slot -->
+        <!-- Left Column: Timeline Ladder (Age Milestones & Club Badges) -->
         <aside class="timeline-sidebar">
           <div class="timeline-ladder" id="timelineLadder">
+            <!-- 18 to 34 Milestones -->
             <div class="ladder-row" data-age="18">
               <div class="age-pill">18</div>
               <div class="ladder-club-slot" id="slot-18">
@@ -133,13 +167,12 @@
               </div>
             </div>
 
-            <!-- Special Step: Retirement -->
+            <!-- Special Steps -->
             <div class="ladder-row special-row" data-age="R">
               <div class="age-pill special-letter letter-r">R</div>
               <div class="special-badge-tag" id="retireLabelTag">اعتزال</div>
             </div>
 
-            <!-- Special Step: Management -->
             <div class="ladder-row special-row" data-age="M">
               <div class="age-pill special-letter letter-m">M</div>
               <div class="special-badge-tag" id="manageLabelTag">تدريب</div>
@@ -147,11 +180,11 @@
           </div>
         </aside>
 
-        <!-- Right Column: Profile HUD + Events Decision Area -->
+        <!-- Right Column: Profile HUD & Events Decision Area -->
         <div class="main-content-column">
           
           <!-- Upper Profile Stats HUD -->
-          <section class="profile-hud">
+          <section class="profile-hud" id="profileHudSection">
             <!-- Region Pill -->
             <div class="hud-pill purple-card" id="hudRegionCard">
               <div class="hud-icon">🌐</div>
@@ -160,21 +193,21 @@
               </div>
             </div>
 
-            <!-- Position Pill -->
+            <!-- Position / Tactical Role Pill -->
             <div class="hud-pill purple-card" id="hudPositionCard">
-              <div class="hud-icon">⚽</div>
+              <div class="hud-icon" id="positionIcon">⚽</div>
               <div class="hud-content">
                 <span class="hud-value" id="playerPosition">مهاجم صريح</span>
               </div>
             </div>
 
-            <!-- Age Pill -->
+            <!-- Age / Manager Experience Pill -->
             <div class="hud-pill age-card" id="hudAgeCard">
               <div class="hud-label-tag" id="ageLabelText">العمر</div>
               <div class="hud-age-number" id="playerAge">18</div>
             </div>
 
-            <!-- Market Value Pill (With dynamic change indicator) -->
+            <!-- Market Value / Club Budget Pill -->
             <div class="hud-pill purple-card" id="hudValueCard">
               <div class="hud-icon">💶</div>
               <div class="hud-content">
@@ -199,6 +232,26 @@
             </div>
           </section>
 
+          <!-- Middle Mini Matchday Stats Strip -->
+          <div class="matchday-stats-strip" id="matchdayStatsStrip">
+            <div class="mini-stat">
+              <span class="ms-label">مباريات</span>
+              <span class="ms-val" id="miniMatches">0</span>
+            </div>
+            <div class="mini-stat">
+              <span class="ms-label" id="miniStat1Label">أهداف</span>
+              <span class="ms-val" id="miniStat1Val">0</span>
+            </div>
+            <div class="mini-stat">
+              <span class="ms-label" id="miniStat2Label">أسيست</span>
+              <span class="ms-val" id="miniStat2Val">0</span>
+            </div>
+            <div class="mini-stat cards">
+              <span class="card-badge yellow" id="miniYellowCards">🟨 0</span>
+              <span class="card-badge red" id="miniRedCards">🟥 0</span>
+            </div>
+          </div>
+
           <!-- Lower Decision Event Stage -->
           <section class="event-stage" id="eventStage">
             <!-- Event Category Pill -->
@@ -212,12 +265,40 @@
               <p id="narrativeText">صراع انتقالات حماسي بين عدة أندية تتنافس لضمك وتقديم عروض رسمية!</p>
             </div>
 
-            <!-- Offers Container: 2-3 Club Options -->
-            <div class="offers-grid" id="offersGrid">
-              <!-- Dynamic Offer Cards -->
+            <!-- Manager Mode Tactical Choices (Visible in Manager Mode) -->
+            <div class="manager-tactics-panel" id="managerTacticsPanel" style="display: none;">
+              <h5 id="tacticsHeaderTitle">اختر خطتك التكتيكية للموسم:</h5>
+              <div class="tactics-buttons-grid">
+                <button class="tactic-card active" data-tactic="attack">
+                  <span class="tactic-icon">⚡</span>
+                  <div class="tactic-info">
+                    <strong>هجوم كاسح 4-3-3</strong>
+                    <small>أهداف عالية ومخاطرة</small>
+                  </div>
+                </button>
+                <button class="tactic-card" data-tactic="balanced">
+                  <span class="tactic-icon">🪄</span>
+                  <div class="tactic-info">
+                    <strong>تيكي تاكا 4-2-3-1</strong>
+                    <small>استحواذ وصناعة لعب</small>
+                  </div>
+                </button>
+                <button class="tactic-card" data-tactic="defense">
+                  <span class="tactic-icon">🛡️</span>
+                  <div class="tactic-info">
+                    <strong>مرتدات حديدية 3-5-2</strong>
+                    <small>دفاع صلب وشباك نظيفة</small>
+                  </div>
+                </button>
+              </div>
             </div>
 
-            <!-- Action Bar (Stay Option) -->
+            <!-- Offers Container (Player Offers or Manager Job Offers) -->
+            <div class="offers-grid" id="offersGrid">
+              <!-- Injected Cards -->
+            </div>
+
+            <!-- Action Bar (Stay Option or Advance Manager Season) -->
             <div class="action-bar" id="actionBar">
               <button class="stay-btn" id="stayBtn">
                 <span>🛡️ البقاء وتجديد العقد مع <strong id="stayClubName">جينك</strong></span>
@@ -236,7 +317,7 @@
           <span class="ribbon-val" id="trophiesCount">🏆 0</span>
         </div>
         <div class="stats-counter">
-          <span class="ribbon-label" id="goalsLabel">الأهداف / المساهمات</span>
+          <span class="ribbon-label" id="goalsLabel">الأهداف الكلية</span>
           <span class="ribbon-val" id="goalsCount">⚽ 0</span>
         </div>
         <div class="stats-counter">
@@ -245,7 +326,7 @@
         </div>
       </footer>
 
-      <!-- SEASON RECAP MODAL (Reveals luck, stats, injuries, and exact trophies won) -->
+      <!-- SEASON RECAP MODAL -->
       <div class="season-modal-overlay" id="seasonModal">
         <div class="season-modal-content">
           <div class="season-header">
@@ -263,20 +344,38 @@
               </div>
             </div>
 
-            <!-- Stats & Financial Delta -->
-            <div class="recap-stats-row">
-              <div class="recap-stat-item">
-                <span class="recap-stat-val" id="recapStatCount">24</span>
-                <span class="recap-stat-lbl" id="recapStatLabel">أهداف</span>
+            <!-- Detailed Season Match Stats (Matches, Goals, Assists, Cards) -->
+            <div class="season-detailed-stats-grid">
+              <div class="sd-stat">
+                <span class="sd-val" id="recapMatches">52</span>
+                <span class="sd-lbl">المباريات 🏟️</span>
               </div>
-              <div class="recap-stat-item">
-                <span class="recap-stat-val" id="recapRating">7.9 ⭐</span>
-                <span class="recap-stat-lbl" id="recapRatingLabel">معدل الأداء</span>
+              <div class="sd-stat">
+                <span class="sd-val" id="recapStatCount">28</span>
+                <span class="sd-lbl" id="recapStatLabel">الأهداف ⚽</span>
               </div>
-              <div class="recap-stat-item">
-                <span class="recap-stat-val highlight" id="recapValueChange">+€6.0M</span>
-                <span class="recap-stat-lbl" id="recapValueChangeLabel">القيمة السوقية</span>
+              <div class="sd-stat">
+                <span class="sd-val" id="recapAssists">11</span>
+                <span class="sd-lbl">الأسيست 👟</span>
               </div>
+              <div class="sd-stat">
+                <span class="sd-val" id="recapYellow">🟨 3</span>
+                <span class="sd-lbl">إنذارات</span>
+              </div>
+              <div class="sd-stat">
+                <span class="sd-val" id="recapRed">🟥 0</span>
+                <span class="sd-lbl">طرد</span>
+              </div>
+              <div class="sd-stat">
+                <span class="sd-val highlight" id="recapValueChange">+€6.0M</span>
+                <span class="sd-lbl" id="recapValueChangeLabel">القيمة السوقية</span>
+              </div>
+            </div>
+
+            <!-- XP Earned Celebration in Season -->
+            <div class="xp-earned-banner">
+              <span>⚡ نقاط الخبرة المكتسبة:</span>
+              <strong id="seasonXpGained">+350 XP</strong>
             </div>
 
             <!-- Named Trophies Won in this season -->
@@ -294,7 +393,21 @@
         </div>
       </div>
 
-      <!-- TROPHY CABINET MODAL (Lists all named trophies won throughout career) -->
+      <!-- GLOBAL LEADERBOARD MODAL (Connected to Free Database) -->
+      <div class="leaderboard-modal-overlay" id="leaderboardModal">
+        <div class="leaderboard-modal-content">
+          <div class="cabinet-header">
+            <h3>👑 لوحة الشرف العالمية للمتصدرين</h3>
+            <button class="close-btn" id="closeLeaderboardBtn">✕</button>
+          </div>
+          <p class="leaderboard-sub" id="leaderboardSub">أعظم أساطير كرة القدم من حول العالم (متصل بالسحابة 🌐)</p>
+          <div class="leaderboard-list" id="leaderboardList">
+            <!-- Injected Leaderboard Items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TROPHY CABINET MODAL -->
       <div class="cabinet-modal-overlay" id="cabinetModal">
         <div class="cabinet-modal-content">
           <div class="cabinet-header">
@@ -302,13 +415,12 @@
             <button class="close-btn" id="closeCabinetBtn">✕</button>
           </div>
           <div class="cabinet-body" id="cabinetList">
-            <!-- List of exact trophies won -->
             <p class="empty-cabinet-text">لم تحقق أي بطولة حتى الآن.. قاتل مع فريقك!</p>
           </div>
         </div>
       </div>
 
-      <!-- Final Career & Management Modal Summary Overlay -->
+      <!-- FINAL CAREER SUMMARY MODAL -->
       <div class="career-modal-overlay" id="careerModal">
         <div class="career-modal-content">
           <div class="modal-confetti-anchor"></div>
@@ -316,7 +428,7 @@
           <div class="modal-header">
             <span class="status-badge" id="modalStatusBadge">نهاية المسيرة الكروية</span>
             <h2 id="modalTitle">أسطورة كروية خالدة</h2>
-            <p class="modal-subtitle" id="modalSubtitle">رحلة تاريخية حافلة بالإنجازات والبطولات</p>
+            <p class="modal-subtitle" id="modalSubtitle">سجل تاريخي كامل موثق في أرشيف كرة القدم</p>
           </div>
 
           <!-- Player Final Card -->
@@ -327,34 +439,72 @@
               <span class="final-tag highlight" id="finalRating">الأعظم في التاريخ 🐐</span>
             </div>
             
-            <div class="career-stat-grid">
-              <div class="stat-box">
-                <span class="stat-num" id="finalSeasons">10</span>
-                <span class="stat-title" id="finalSeasonsLabel">مواسم</span>
+            <!-- Complete In-Depth Statistics Grid (Matches, Goals, Assists, Cards, World Cups, UCLs, Leagues, Cups) -->
+            <div class="deep-career-stats-table">
+              <div class="deep-stat-cell">
+                <span class="dsc-val" id="finalMatches">740</span>
+                <span class="dsc-lbl">مباراة 🏟️</span>
               </div>
-              <div class="stat-box">
-                <span class="stat-num" id="finalTrophies">7</span>
-                <span class="stat-title" id="finalTrophiesLabel">بطولات 🏆</span>
+              <div class="deep-stat-cell">
+                <span class="dsc-val" id="finalGoals">420</span>
+                <span class="dsc-lbl" id="finalGoalTitle">الأهداف ⚽</span>
               </div>
-              <div class="stat-box">
-                <span class="stat-num" id="finalGoals">248</span>
-                <span class="stat-title" id="finalGoalTitle">الأهداف الكروية</span>
+              <div class="deep-stat-cell">
+                <span class="dsc-val" id="finalAssists">156</span>
+                <span class="dsc-lbl">أسيست 👟</span>
               </div>
-              <div class="stat-box">
-                <span class="stat-num" id="finalPeakVal">€120M</span>
-                <span class="stat-title" id="finalPeakLabel">أعلى قيمة سوقية</span>
+              <div class="deep-stat-cell">
+                <span class="dsc-val yellow" id="finalYellow">🟨 42</span>
+                <span class="dsc-lbl">إنذارات</span>
+              </div>
+              <div class="deep-stat-cell">
+                <span class="dsc-val red" id="finalRed">🟥 3</span>
+                <span class="dsc-lbl">طرد</span>
+              </div>
+              <div class="deep-stat-cell">
+                <span class="dsc-val gold" id="finalPeakVal">€130M</span>
+                <span class="dsc-lbl">أعلى قيمة 💎</span>
               </div>
             </div>
 
-            <!-- Detailed List of Trophies Won in End Game -->
+            <!-- Trophies Breakdown Counters (World Cups, UCLs, Leagues, Cups, Ballon d'Ors) -->
+            <div class="trophies-breakdown-banner">
+              <div class="tb-item">
+                <span class="tb-icon">🌍</span>
+                <strong id="finalWorldCups">0</strong>
+                <small>كأس عالم</small>
+              </div>
+              <div class="tb-item">
+                <span class="tb-icon">🏆</span>
+                <strong id="finalUCLs">2</strong>
+                <small>دوري أبطال</small>
+              </div>
+              <div class="tb-item">
+                <span class="tb-icon">🥇</span>
+                <strong id="finalLeagues">5</strong>
+                <small>دوري محلي</small>
+              </div>
+              <div class="tb-item">
+                <span class="tb-icon">🥈</span>
+                <strong id="finalCups">4</strong>
+                <small>كأس محلي</small>
+              </div>
+              <div class="tb-item">
+                <span class="tb-icon">🌕</span>
+                <strong id="finalBallonDors">1</strong>
+                <small>كرة ذهبية</small>
+              </div>
+            </div>
+
+            <!-- Specific Trophies Won Tags -->
             <div class="final-trophies-cabinet">
               <h4 id="finalTrophiesListTitle">🏆 البطولات المحققة عبر التاريخ:</h4>
               <div class="final-trophies-tags" id="finalTrophiesTags">
-                <!-- Injected trophy pills -->
+                <!-- Injected trophy tags -->
               </div>
             </div>
 
-            <!-- Clubs Timeline Summary -->
+            <!-- Clubs Journey -->
             <div class="career-clubs-path">
               <h4 id="journeyTitle">مسيرة الأندية</h4>
               <div class="clubs-trail" id="clubsTrail">
@@ -362,7 +512,7 @@
               </div>
             </div>
 
-            <!-- Management Role Post-Retirement -->
+            <!-- Managerial Calling -->
             <div class="management-reveal" id="managementReveal">
               <div class="management-title" id="managementTitleText">المسيرة التدريبية بعد الاعتزال 👔</div>
               <div class="manager-club-card" id="managerClubCard">
@@ -393,6 +543,6 @@
   <!-- Canvas for Confetti -->
   <canvas id="confettiCanvas"></canvas>
 
-  <script src="script.js?v=3.0"></script>
+  <script src="script.js?v=4.0"></script>
 </body>
 </html>
