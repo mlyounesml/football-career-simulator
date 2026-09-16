@@ -1,44 +1,33 @@
-# ⚽ Football Player Career Simulator
+# ⚽ محاكي مسيرة لاعب كرة القدم | Football Player Career Simulator
 
-A viral TikTok & Instagram Reels filter-inspired Football Player Career Simulator built with modern HTML5, CSS3, and JavaScript (ES6+). Experience the thrill of climbing from an 18-year-old wonderkid to football legend and managerial mastermind!
+لعبة محاكاة مسيرة لاعب كرة القدم مستوحاة من فلاتر التيك توك وإنستغرام ريلز الشهيرة (TikTok / Reels Filter Games).
+عش الإثارة من عمر 18 سنة حتى القمة والاعتزال ومرحلة التدريب!
 
-🔗 **Live Demo:** [https://mlyounesml.github.io/football-career-simulator/](https://mlyounesml.github.io/football-career-simulator/)
-
----
-
-## 🎮 Game Highlights & Features
-
-- **TikTok / Reels Filter Aesthetic:**
-  - Iconic vertical age ladder (`18`, `20`, `22`, `24`, `26`, `28`, `30`, `32`, `34`, `Retiring`, `Management`).
-  - High-contrast visual interface with magenta, purple, electric yellow, and mint green sports palette.
-  - Player HUD displaying Nationality/Region, Position, Age, Market Value (€), and Current Team crest.
-- **Dynamic 20/80 RNG Football Logic:**
-  - **20% Realistic Logic:** Market value curve (wonderkid peak to veteran twilight years), club tiers (World Elite to starter incubators), and prestige-driven post-retirement managerial roles.
-  - **80% RNG & Wildcards:** Bidding wars, transfer showdowns, sudden hype surges, trophy celebrations, and exotic retirement offers.
-- **45+ Real Football Clubs with Crisp Vector Crests:**
-  - Tier 1: Real Madrid, Manchester City, Bayern Munich, PSG, Barcelona, Arsenal, Liverpool, Inter Milan.
-  - Tier 2: Dortmund, Atlético Madrid, Juventus, AC Milan, Chelsea, Manchester United, Tottenham, Napoli, Benfica, Sporting CP, Ajax, Porto, Leverkusen, Aston Villa.
-  - Tier 3: Genk, Club Brugge, Feyenoord, Sevilla, Roma, Marseille, Panathinaikos, Olympiacos, Celtic, Galatasaray, Fenerbahçe, Real Sociedad.
-  - Tier 4: Dinamo Zagreb, Red Star, Santos, Boca Juniors, River Plate, Palmeiras, Anderlecht, Basel, Malmö.
-  - Emerging / Twilight: Al Hilal, Al Nassr, Inter Miami, LAFC.
-- **Audio & Visual FX:**
-  - Web Audio API synthesizer for match whistles, transfer chimes, clicks, and trophy fanfares (no external audio files required, zero latency).
-  - Canvas confetti particle cannon for milestone transfers and championship glory.
-- **Full End Game & Managerial Phase:**
-  - Hall of Fame Legacy rating (`THE GOAT 🐐`, `WORLD CLASS LEGEND 🌟`, `CULT HERO ⭐`, `ICONIC JOURNEYMAN 🌍`).
-  - Club journey timeline.
-  - Immediate managerial job appointment.
-  - "Copy Career Resume" to easily share your journey with friends.
+🔗 **رابط اللعبة المباشر (Live Site):** [https://mlyounesml.github.io/football-career-simulator/](https://mlyounesml.github.io/football-career-simulator/)
 
 ---
 
-## 📱 Responsive & Touch-Friendly
-Designed to look and feel like a native mobile filter screen on phones, while seamlessly rendering inside an elegant preview frame on desktops.
+## 🌟 أبرز المميزات والإضافات الجديدة (Features)
+
+- 🌍 **دعم كامل للغة العربية (عربي / English):**
+  - واجهة عربية أصيلة مع خطوط رياضية حديثة (`Cairo` و `Tajawal`) متطابقة مع شاشات القنوات الرياضية.
+  - إمكانية التبديل الفوري بين العربية والإنجليزية عبر زر `EN / عربي` في الأعلى.
+- 🏟️ **شريط الأعمار مع شعار واسم النادي (Age + Club Badge Ladder):**
+  - يظهر بجانب كل عمر (18، 20، 22، 24، 26، 28، 30، 32، 34) شعار واسم النادي الذي لعبت له في تلك المرحلة العمرية بشكل متصل وتفاعلي، تماماً كما في فلتر التيك توك الأصلي.
+- 🔀 **حرية الاختيار بين عدة أندية (Multiple Club Offers):**
+  - في كل محطة ومرحلة انتقالات، يتم تقديم **ناديين إلى 3 أندية كبرى** بعروض ورواتب مختلفة لاختيار النادي الأنسب لك، بالإضافة لخيار البقاء وتجديد العقد مع ناديك الحالي.
+- 📱 **توافق كامل مع كافة الأجهزة وشاشات الهواتف والكمبيوتر:**
+  - تصميم متجاوب فائق الدقة (Responsive) يدعم الهواتف بجميع أحجامها، أجهزة الآيباد، وشاشات الحواسيب المكتبية.
+- 🏆 **45+ نادي عالمي وعربي بأحدث الشعارات:**
+  - ريال مدريد، برشلونة، مانشستر سيتي، بايرن ميونخ، ليفربول، أرسنال، إنتر ميلان، دورتموند، باناتينايكوس، جينك، الهلال، النصر، الأهلي، الزمالك، إنتر ميامي، بوكا جونيورز، سانتوس، وغيرها.
+- 🔊 **مؤثرات صوتية ومؤثرات احتفالية:**
+  - صافرة بداية الموسم، نغمات الانتقال، صخب البطولات، وألعاب نارية وكانفيتي (Confetti) احتفالي عند حصد الألقاب والاعتزال.
+- 👔 **مرحلة ما بعد الاعتزال وعالم التدريب:**
+  - عروض تدريبية مخصصة، كشف سجل الأندية الكامل، وتصنيف الأسطورة (`الأعظم في التاريخ GOAT 🐐`، `أسطورة كروية عالمية 🌟`، `بطل الجماهير ⭐`، `رحالة كروي 🌍`).
 
 ---
 
-## 🚀 Automated Deployment
-Published automatically to GitHub Pages via the GitHub REST API.
-Repository: `mlyounesml/football-career-simulator`
-Branch: `main`
-Website: `https://mlyounesml.github.io/football-career-simulator/`
+## 🚀 النشر التلقائي عبر GitHub Pages
+تم نشر وتحديث المشروع بالكامل على GitHub Pages عبر GitHub REST API:
+- **المستودع (Repository):** `https://github.com/mlyounesml/football-career-simulator`
+- **الموقع المباشر:** `https://mlyounesml.github.io/football-career-simulator/`
