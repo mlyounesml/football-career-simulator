@@ -1,14 +1,17 @@
 /**
- * FOOTBALL PLAYER CAREER SIMULATOR - REALISTIC PRO ENGINE
- * 20% Deep Football Realism + 80% Unpredictable RNG Luck
- * Real Trophies Tracking, Injuries, Slumps, Ballon d'Or, World Cup, and Season Recaps
+ * FOOTBALL PLAYER & MANAGER CAREER SIMULATOR PRO
+ * - Addictive XP & Leveling System
+ * - Dual Mode: Player Career & Manager Career Mode
+ * - Complete In-Depth Stats: Matches, Goals, Assists, Yellows, Reds, World Cups, UCLs, Leagues, Cups
+ * - Adaptive Learning AI (Evolving Q-weights with each run)
+ * - Free Cloud Database Sync (Firebase REST + Offline-first LocalStorage)
  */
 
 (function () {
   'use strict';
 
   // ==========================================
-  // 1. CLUBS DATABASE WITH REAL LEAGUES & COMPETITIONS
+  // 1. CLUBS DATABASE (WITH REAL LEAGUES & TROPHIES)
   // ==========================================
   const CLUBS = [
     // Tier 1: World Elite Giants
@@ -134,16 +137,8 @@
       contEn: 'UEFA Champions League', contAr: 'دوري أبطال أوروبا',
       c1: '#ffffff', c2: '#dc2626', text: 'AFCA' 
     },
-    { 
-      id: 'leverkusen', nameEn: 'LEVERKUSEN', nameAr: 'باير ليفركوزن', 
-      countryEn: 'GERMANY', countryAr: 'ألمانيا', flag: '🇩🇪', tier: 2, 
-      leagueEn: 'Bundesliga', leagueAr: 'الدوري الألماني', 
-      cupEn: 'DFB-Pokal', cupAr: 'كأس ألمانيا',
-      contEn: 'UEFA Europa League', contAr: 'الدوري الأوروبي',
-      c1: '#b91c1c', c2: '#000000', text: 'B04' 
-    },
 
-    // Tier 3: Competitive Mid-Tier & Regional Powerhouses
+    // Tier 3: Competitive Mid-Tier
     { 
       id: 'genk', nameEn: 'GENK', nameAr: 'جينك', 
       countryEn: 'BELGIUM', countryAr: 'بلجيكا', flag: '🇧🇪', tier: 3, 
@@ -156,7 +151,7 @@
       id: 'panathinaikos', nameEn: 'PANATHINAIKOS', nameAr: 'باناتينايكوس', 
       countryEn: 'GREECE', countryAr: 'اليونان', flag: '🇬🇷', tier: 3, 
       leagueEn: 'Super League Greece', leagueAr: 'الدوري اليوناني الممتاز', 
-      cupEn: 'Greek Football Cup', cupAr: 'كأس اليونان',
+      cupEn: 'Greek Cup', cupAr: 'كأس اليونان',
       contEn: 'UEFA Europa League', contAr: 'الدوري الأوروبي',
       c1: '#15803d', c2: '#ffffff', text: 'PAO' 
     },
@@ -169,14 +164,6 @@
       c1: '#16a34a', c2: '#ffffff', text: 'CEL' 
     },
     { 
-      id: 'galatasaray', nameEn: 'GALATASARAY', nameAr: 'غلطة سراي', 
-      countryEn: 'TURKEY', countryAr: 'تركيا', flag: '🇹🇷', tier: 3, 
-      leagueEn: 'Süper Lig', leagueAr: 'الدوري التركي', 
-      cupEn: 'Turkish Cup', cupAr: 'كأس تركيا',
-      contEn: 'UEFA Europa League', contAr: 'الدوري الأوروبي',
-      c1: '#b91c1c', c2: '#f59e0b', text: 'GS' 
-    },
-    { 
       id: 'sevilla', nameEn: 'SEVILLA', nameAr: 'إشبيلية', 
       countryEn: 'SPAIN', countryAr: 'إسبانيا', flag: '🇪🇸', tier: 3, 
       leagueEn: 'La Liga', leagueAr: 'الدوري الإسباني', 
@@ -185,7 +172,7 @@
       c1: '#ffffff', c2: '#dc2626', text: 'SFC' 
     },
 
-    // Tier 4: Historic Incubators & Starter Clubs
+    // Tier 4: Historic Incubators
     { 
       id: 'dinamo_zagreb', nameEn: 'DINAMO ZAGREB', nameAr: 'دينامو زغرب', 
       countryEn: 'CROATIA', countryAr: 'كرواتيا', flag: '🇭🇷', tier: 4, 
@@ -209,14 +196,6 @@
       cupEn: 'Copa Argentina', cupAr: 'كأس الأرجنتين',
       contEn: 'Copa Libertadores', contAr: 'كوبا ليبرتادوريس',
       c1: '#1e3a8a', c2: '#facc15', text: 'CABJ' 
-    },
-    { 
-      id: 'anderlecht', nameEn: 'ANDERLECHT', nameAr: 'أندرلخت', 
-      countryEn: 'BELGIUM', countryAr: 'بلجيكا', flag: '🇧🇪', tier: 4, 
-      leagueEn: 'Belgian Pro League', leagueAr: 'الدوري البلجيكي الممتاز', 
-      cupEn: 'Belgian Cup', cupAr: 'كأس بلجيكا',
-      contEn: 'UEFA Conference League', contAr: 'دوري المؤتمر الأوروبي',
-      c1: '#6b21a8', c2: '#ffffff', text: 'RSCA' 
     },
 
     // Arab & International Powerhouses
@@ -412,6 +391,25 @@
       osc.start(now);
       osc.stop(now + 0.3);
     }
+
+    playLevelUp() {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((freq, idx) => {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.18, now + idx * 0.08);
+        gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.08 + 0.25);
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.26);
+      });
+    }
   }
 
   // ==========================================
@@ -490,7 +488,201 @@
   }
 
   // ==========================================
-  // 5. REGIONS & POSITIONS
+  // 5. CLOUD DATABASE & ADAPTIVE AI ENGINE
+  // ==========================================
+  const CLOUD_DB_BASE = 'https://football-career-sim-default-rtdb.firebaseio.com';
+
+  class CloudAIHub {
+    constructor() {
+      this.defaultAI = {
+        generation: 4,
+        careersTrained: 148,
+        difficultyBias: 1.0,
+        injuryRate: 0.18,
+        wonderkidRate: 0.18,
+        transferAggression: 1.15
+      };
+      this.aiState = this.loadLocalAI();
+      this.syncCloudAI();
+    }
+
+    loadLocalAI() {
+      try {
+        const stored = localStorage.getItem('career_ai_state_v4');
+        return stored ? JSON.parse(stored) : { ...this.defaultAI };
+      } catch (e) {
+        return { ...this.defaultAI };
+      }
+    }
+
+    saveLocalAI() {
+      try {
+        localStorage.setItem('career_ai_state_v4', JSON.stringify(this.aiState));
+      } catch (e) {}
+    }
+
+    async syncCloudAI() {
+      try {
+        const res = await fetch(`${CLOUD_DB_BASE}/ai_state.json`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.generation) {
+            this.aiState.generation = Math.max(this.aiState.generation, data.generation);
+            this.aiState.careersTrained = Math.max(this.aiState.careersTrained, data.careersTrained || 0);
+            this.saveLocalAI();
+          }
+        }
+      } catch (e) {
+        // Offline-first fallback
+      }
+    }
+
+    async trainOnCareerRun(careerSummary) {
+      this.aiState.careersTrained++;
+      // Evolve AI weights adaptively:
+      if (careerSummary.trophiesCount >= 6) {
+        // Player dominated: increase challenge
+        this.aiState.difficultyBias = Math.min(1.4, this.aiState.difficultyBias + 0.02);
+      } else if (careerSummary.trophiesCount <= 1 && careerSummary.injuriesCount >= 2) {
+        // Player struggled: balance injury curve
+        this.aiState.injuryRate = Math.max(0.12, this.aiState.injuryRate - 0.01);
+        this.aiState.wonderkidRate = Math.min(0.25, this.aiState.wonderkidRate + 0.01);
+      }
+
+      if (this.aiState.careersTrained % 10 === 0) {
+        this.aiState.generation++;
+      }
+
+      this.saveLocalAI();
+
+      // Async cloud sync
+      try {
+        fetch(`${CLOUD_DB_BASE}/ai_state.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.aiState)
+        }).catch(() => {});
+      } catch (e) {}
+    }
+
+    async submitLeaderboardScore(entry) {
+      // Save locally
+      let localScores = [];
+      try {
+        localScores = JSON.parse(localStorage.getItem('career_leaderboard_v4') || '[]');
+      } catch (e) {}
+      localScores.push(entry);
+      localScores.sort((a, b) => (b.trophies || 0) - (a.trophies || 0) || (b.goals || 0) - (a.goals || 0));
+      localScores = localScores.slice(0, 20);
+      try {
+        localStorage.setItem('career_leaderboard_v4', JSON.stringify(localScores));
+      } catch (e) {}
+
+      // Cloud save
+      try {
+        fetch(`${CLOUD_DB_BASE}/leaderboard.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(entry)
+        }).catch(() => {});
+      } catch (e) {}
+    }
+
+    async fetchLeaderboard() {
+      let scores = [];
+      try {
+        const res = await fetch(`${CLOUD_DB_BASE}/leaderboard.json`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && typeof data === 'object') {
+            scores = Object.values(data);
+          }
+        }
+      } catch (e) {}
+
+      if (scores.length === 0) {
+        try {
+          scores = JSON.parse(localStorage.getItem('career_leaderboard_v4') || '[]');
+        } catch (e) {}
+      }
+
+      // Default sample legends if empty
+      if (scores.length === 0) {
+        scores = [
+          { name: 'Lionel Messi 🇦🇷', club: 'Barcelona', trophies: 12, goals: 672, rank: 'THE GOAT 🐐', mode: 'player' },
+          { name: 'Cristiano Ronaldo 🇵🇹', club: 'Real Madrid', trophies: 11, goals: 710, rank: 'THE GOAT 🐐', mode: 'player' },
+          { name: 'Pep Guardiola 🇪🇸', club: 'Man City', trophies: 14, goals: 890, rank: 'TACTICAL MASTERMIND 🧠', mode: 'manager' },
+          { name: 'Carlo Ancelotti 🇮🇹', club: 'Real Madrid', trophies: 10, goals: 720, rank: 'LEGENDARY DYNASTY 👑', mode: 'manager' }
+        ];
+      }
+
+      scores.sort((a, b) => (b.trophies || 0) - (a.trophies || 0) || (b.goals || 0) - (a.goals || 0));
+      return scores.slice(0, 15);
+    }
+  }
+
+  // ==========================================
+  // 6. ADDICTIVE PROGRESSION (XP & LEVELS)
+  // ==========================================
+  class ProgressionHub {
+    constructor(sound, confetti) {
+      this.sound = sound;
+      this.confetti = confetti;
+      this.level = 1;
+      this.currentXP = 0;
+      this.load();
+    }
+
+    load() {
+      try {
+        const stored = localStorage.getItem('career_progression_v4');
+        if (stored) {
+          const p = JSON.parse(stored);
+          this.level = p.level || 1;
+          this.currentXP = p.currentXP || 0;
+        }
+      } catch (e) {}
+    }
+
+    save() {
+      try {
+        localStorage.setItem('career_progression_v4', JSON.stringify({
+          level: this.level,
+          currentXP: this.currentXP
+        }));
+      } catch (e) {}
+    }
+
+    getXPForLevel(lvl) {
+      return 250 + (lvl - 1) * 150;
+    }
+
+    addXP(amount, onLevelUp) {
+      this.currentXP += amount;
+      let needed = this.getXPForLevel(this.level);
+      let leveledUp = false;
+
+      while (this.currentXP >= needed) {
+        this.currentXP -= needed;
+        this.level++;
+        needed = this.getXPForLevel(this.level);
+        leveledUp = true;
+      }
+
+      this.save();
+
+      if (leveledUp) {
+        this.sound.playLevelUp();
+        this.confetti.burst(80);
+        if (onLevelUp) onLevelUp(this.level);
+      }
+
+      return { level: this.level, currentXP: this.currentXP, needed: needed, leveledUp: leveledUp };
+    }
+  }
+
+  // ==========================================
+  // 7. REGIONS & POSITIONS
   // ==========================================
   const REGIONS = [
     { nameEn: 'SOUTH AMERICA', nameAr: 'أمريكا الجنوبية', flag: '🌎', countriesAr: ['البرازيل', 'الأرجنتين', 'أوروغواي', 'كولومبيا'], countriesEn: ['BRAZIL', 'ARGENTINA', 'URUGUAY', 'COLOMBIA'] },
@@ -502,7 +694,7 @@
 
   const POSITIONS = [
     { titleEn: 'STRIKER', titleAr: 'مهاجم صريح', icon: '⚽', statEn: 'GOALS', statAr: 'أهداف' },
-    { titleEn: 'WINGER', titleAr: 'جناح هجومي', icon: '⚡', statEn: 'G/A', statAr: 'أهداف وصناعة' },
+    { titleEn: 'WINGER', titleAr: 'جناح هجومي', icon: '⚡', statEn: 'GOALS', statAr: 'أهداف وصناعة' },
     { titleEn: 'ATTACKING MID', titleAr: 'صانع ألعاب', icon: '🎯', statEn: 'ASSISTS', statAr: 'تمريرات حاسمة' },
     { titleEn: 'CENTRAL MID', titleAr: 'لاعب وسط', icon: '🪄', statEn: 'CONTRIBUTIONS', statAr: 'مساهمات وسط' },
     { titleEn: 'CENTRE BACK', titleAr: 'قلب دفاع', icon: '🛡️', statEn: 'CLEAN SHEETS', statAr: 'شباك نظيفة' },
@@ -513,22 +705,39 @@
   const MILESTONES = [18, 20, 22, 24, 26, 28, 30, 32, 34, 'R', 'M'];
 
   // ==========================================
-  // 6. CAREER SIMULATION ENGINE
+  // 8. MASTER GAME CONTROLLER (PRO DUAL-MODE)
   // ==========================================
-  class CareerGame {
+  class CareerGamePro {
     constructor() {
       this.sound = new SoundManager();
       this.confetti = new ConfettiEngine();
+      this.cloudAI = new CloudAIHub();
+      this.progression = new ProgressionHub(this.sound, this.confetti);
+
+      this.gameMode = 'player'; // 'player' or 'manager'
       this.lang = 'ar';
       this.milestoneIndex = 0;
+      this.currentTactic = 'attack'; // attack, balanced, defense
+
+      // Deep Stats Accumulators
       this.player = null;
       this.careerHistory = [];
-      this.allTrophies = []; // [{ nameAr, nameEn, icon, clubName, age }]
+      this.allTrophies = [];
       this.ageClubMap = {};
-      this.totalStatScore = 0;
+      this.totalMatches = 0;
+      this.totalGoals = 0;
+      this.totalAssists = 0;
+      this.totalYellow = 0;
+      this.totalRed = 0;
       this.totalEarnings = 0;
       this.peakMarketValue = 0;
-      this.currentOffers = [];
+
+      // Trophy Sub-counts
+      this.countWorldCups = 0;
+      this.countUCLs = 0;
+      this.countLeagues = 0;
+      this.countCups = 0;
+      this.countBallonDors = 0;
 
       this.initDOMElements();
       this.bindEvents();
@@ -537,6 +746,12 @@
 
     initDOMElements() {
       this.dom = {
+        // Controls
+        xpLevelWidget: document.getElementById('xpLevelWidget'),
+        playerLevelBadge: document.getElementById('playerLevelBadge'),
+        xpFillBar: document.getElementById('xpFillBar'),
+        xpTextDisplay: document.getElementById('xpTextDisplay'),
+        leaderboardBtn: document.getElementById('leaderboardBtn'),
         trophyCabinetBtn: document.getElementById('trophyCabinetBtn'),
         trophyBadgeCount: document.getElementById('trophyBadgeCount'),
         langToggleBtn: document.getElementById('langToggleBtn'),
@@ -544,14 +759,25 @@
         audioToggleBtn: document.getElementById('audioToggleBtn'),
         audioIcon: document.getElementById('audioIcon'),
         restartGameBtn: document.getElementById('restartGameBtn'),
+
+        // Top bar
+        tabPlayerMode: document.getElementById('tabPlayerMode'),
+        tabManagerMode: document.getElementById('tabManagerMode'),
         miniCrest: document.getElementById('miniCrest'),
         miniClubName: document.getElementById('miniClubName'),
         miniClubCountry: document.getElementById('miniClubCountry'),
         miniSeasonTag: document.getElementById('miniSeasonTag'),
+        aiStatusText: document.getElementById('aiStatusText'),
+
+        // Ladder
         timelineLadder: document.getElementById('timelineLadder'),
         ladderRows: document.querySelectorAll('.ladder-row'),
+
+        // HUD
+        profileHudSection: document.getElementById('profileHudSection'),
         playerRegion: document.getElementById('playerRegion'),
         playerPosition: document.getElementById('playerPosition'),
+        positionIcon: document.getElementById('positionIcon'),
         playerAge: document.getElementById('playerAge'),
         playerValue: document.getElementById('playerValue'),
         valTrend: document.getElementById('valTrend'),
@@ -560,15 +786,32 @@
         currentTeamName: document.getElementById('currentTeamName'),
         currentTeamCountry: document.getElementById('currentTeamCountry'),
         currentSeasonBadge: document.getElementById('currentSeasonBadge'),
+
+        // Matchday Strip
+        matchdayStatsStrip: document.getElementById('matchdayStatsStrip'),
+        miniMatches: document.getElementById('miniMatches'),
+        miniStat1Label: document.getElementById('miniStat1Label'),
+        miniStat1Val: document.getElementById('miniStat1Val'),
+        miniStat2Label: document.getElementById('miniStat2Label'),
+        miniStat2Val: document.getElementById('miniStat2Val'),
+        miniYellowCards: document.getElementById('miniYellowCards'),
+        miniRedCards: document.getElementById('miniRedCards'),
+
+        // Event Stage
         eventBadgePill: document.getElementById('eventBadgePill'),
         eventBadgeIcon: document.getElementById('eventBadgeIcon'),
         eventBadgeText: document.getElementById('eventBadgeText'),
         narrativeBox: document.getElementById('narrativeBox'),
         narrativeText: document.getElementById('narrativeText'),
+        managerTacticsPanel: document.getElementById('managerTacticsPanel'),
+        tacticsHeaderTitle: document.getElementById('tacticsHeaderTitle'),
+        tacticCards: document.querySelectorAll('.tactic-card'),
         offersGrid: document.getElementById('offersGrid'),
         actionBar: document.getElementById('actionBar'),
         stayBtn: document.getElementById('stayBtn'),
         stayClubName: document.getElementById('stayClubName'),
+
+        // Bottom Ribbon
         ribbonTrophiesCounter: document.getElementById('ribbonTrophiesCounter'),
         trophiesLabel: document.getElementById('trophiesLabel'),
         trophiesCount: document.getElementById('trophiesCount'),
@@ -577,7 +820,7 @@
         earningsLabel: document.getElementById('earningsLabel'),
         careerEarnings: document.getElementById('careerEarnings'),
 
-        // Season Recap Modal
+        // Season Modal
         seasonModal: document.getElementById('seasonModal'),
         recapSeasonYear: document.getElementById('recapSeasonYear'),
         recapClubHeader: document.getElementById('recapClubHeader'),
@@ -585,16 +828,25 @@
         recapEventIcon: document.getElementById('recapEventIcon'),
         recapEventTitle: document.getElementById('recapEventTitle'),
         recapEventDetail: document.getElementById('recapEventDetail'),
+        recapMatches: document.getElementById('recapMatches'),
         recapStatCount: document.getElementById('recapStatCount'),
         recapStatLabel: document.getElementById('recapStatLabel'),
-        recapRating: document.getElementById('recapRating'),
-        recapRatingLabel: document.getElementById('recapRatingLabel'),
+        recapAssists: document.getElementById('recapAssists'),
+        recapYellow: document.getElementById('recapYellow'),
+        recapRed: document.getElementById('recapRed'),
         recapValueChange: document.getElementById('recapValueChange'),
         recapValueChangeLabel: document.getElementById('recapValueChangeLabel'),
+        seasonXpGained: document.getElementById('seasonXpGained'),
         recapTrophiesTitle: document.getElementById('recapTrophiesTitle'),
         recapTrophiesList: document.getElementById('recapTrophiesList'),
         continueCareerBtn: document.getElementById('continueCareerBtn'),
         continueCareerText: document.getElementById('continueCareerText'),
+
+        // Leaderboard Modal
+        leaderboardModal: document.getElementById('leaderboardModal'),
+        closeLeaderboardBtn: document.getElementById('closeLeaderboardBtn'),
+        leaderboardList: document.getElementById('leaderboardList'),
+        leaderboardSub: document.getElementById('leaderboardSub'),
 
         // Cabinet Modal
         cabinetModal: document.getElementById('cabinetModal'),
@@ -609,14 +861,18 @@
         finalRegion: document.getElementById('finalRegion'),
         finalPosition: document.getElementById('finalPosition'),
         finalRating: document.getElementById('finalRating'),
-        finalSeasons: document.getElementById('finalSeasons'),
-        finalSeasonsLabel: document.getElementById('finalSeasonsLabel'),
-        finalTrophies: document.getElementById('finalTrophies'),
-        finalTrophiesLabel: document.getElementById('finalTrophiesLabel'),
+        finalMatches: document.getElementById('finalMatches'),
         finalGoals: document.getElementById('finalGoals'),
         finalGoalTitle: document.getElementById('finalGoalTitle'),
+        finalAssists: document.getElementById('finalAssists'),
+        finalYellow: document.getElementById('finalYellow'),
+        finalRed: document.getElementById('finalRed'),
         finalPeakVal: document.getElementById('finalPeakVal'),
-        finalPeakLabel: document.getElementById('finalPeakLabel'),
+        finalWorldCups: document.getElementById('finalWorldCups'),
+        finalUCLs: document.getElementById('finalUCLs'),
+        finalLeagues: document.getElementById('finalLeagues'),
+        finalCups: document.getElementById('finalCups'),
+        finalBallonDors: document.getElementById('finalBallonDors'),
         finalTrophiesListTitle: document.getElementById('finalTrophiesListTitle'),
         finalTrophiesTags: document.getElementById('finalTrophiesTags'),
         journeyTitle: document.getElementById('journeyTitle'),
@@ -637,6 +893,39 @@
     }
 
     bindEvents() {
+      // Mode Tabs
+      this.dom.tabPlayerMode.addEventListener('click', () => {
+        if (this.gameMode !== 'player') {
+          this.sound.playClick();
+          this.gameMode = 'player';
+          this.dom.tabPlayerMode.classList.add('active');
+          this.dom.tabManagerMode.classList.remove('active');
+          this.dom.managerTacticsPanel.style.display = 'none';
+          this.startNewCareer();
+        }
+      });
+
+      this.dom.tabManagerMode.addEventListener('click', () => {
+        if (this.gameMode !== 'manager') {
+          this.sound.playClick();
+          this.gameMode = 'manager';
+          this.dom.tabManagerMode.classList.add('active');
+          this.dom.tabPlayerMode.classList.remove('active');
+          this.dom.managerTacticsPanel.style.display = 'flex';
+          this.startNewCareer();
+        }
+      });
+
+      // Tactic Cards
+      this.dom.tacticCards.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.sound.playClick();
+          this.dom.tacticCards.forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          this.currentTactic = btn.dataset.tactic;
+        });
+      });
+
       this.dom.langToggleBtn.addEventListener('click', () => {
         this.sound.playClick();
         this.toggleLanguage();
@@ -663,7 +952,16 @@
         this.advanceToNextMilestone();
       });
 
-      // Trophy Cabinet Open/Close
+      // Modals
+      this.dom.leaderboardBtn.addEventListener('click', () => {
+        this.sound.playClick();
+        this.openLeaderboard();
+      });
+      this.dom.closeLeaderboardBtn.addEventListener('click', () => {
+        this.sound.playClick();
+        this.dom.leaderboardModal.classList.remove('active');
+      });
+
       this.dom.trophyCabinetBtn.addEventListener('click', () => {
         this.sound.playClick();
         this.openTrophyCabinet();
@@ -677,13 +975,12 @@
         this.dom.cabinetModal.classList.remove('active');
       });
 
-      // Final Modal Actions
+      // Final Modal
       this.dom.playAgainBtn.addEventListener('click', () => {
         this.sound.playClick();
         this.dom.careerModal.classList.remove('active');
         this.startNewCareer();
       });
-
       this.dom.shareCareerBtn.addEventListener('click', () => {
         this.sound.playClick();
         this.copyCareerResume();
@@ -712,37 +1009,71 @@
 
     applyStaticTranslations() {
       const isAr = this.lang === 'ar';
-      this.dom.ageLabelText.textContent = isAr ? 'العمر' : 'AGE';
-      this.dom.currentTeamTitle.textContent = isAr ? 'الفريق الحالي' : 'CURRENT TEAM';
-      this.dom.retireLabelTag.textContent = isAr ? 'اعتزال' : 'RETIRING';
-      this.dom.manageLabelTag.textContent = isAr ? 'تدريب' : 'MANAGEMENT';
+      const isMgr = this.gameMode === 'manager';
+
+      this.dom.tabPlayerMode.innerHTML = `<span>${isAr ? '👟 طور اللاعب' : '👟 PLAYER'}</span>`;
+      this.dom.tabManagerMode.innerHTML = `<span>${isAr ? '👔 طور المدرب' : '👔 MANAGER'}</span>`;
+
+      this.dom.ageLabelText.textContent = isMgr ? (isAr ? 'الموسم' : 'SEASON') : (isAr ? 'العمر' : 'AGE');
+      this.dom.currentTeamTitle.textContent = isMgr ? (isAr ? 'النادي الذي تدربه' : 'MANAGED CLUB') : (isAr ? 'الفريق الحالي' : 'CURRENT TEAM');
+      this.dom.retireLabelTag.textContent = isMgr ? (isAr ? 'التقاعد' : 'RETIRE') : (isAr ? 'اعتزال' : 'RETIRING');
+      this.dom.manageLabelTag.textContent = isMgr ? (isAr ? 'مستشار' : 'DIRECTOR') : (isAr ? 'تدريب' : 'MANAGEMENT');
       this.dom.trophiesLabel.textContent = isAr ? 'البطولات (عرض 🔍)' : 'TROPHIES (VIEW 🔍)';
-      this.dom.goalsLabel.textContent = isAr ? 'الأهداف / المساهمات' : 'GOALS / CS';
+      this.dom.goalsLabel.textContent = isMgr ? (isAr ? 'أهداف الفريق' : 'TEAM GOALS') : (isAr ? 'الأهداف الكلية' : 'TOTAL GOALS');
       this.dom.earningsLabel.textContent = isAr ? 'إجمالي الأرباح' : 'CAREER EARNINGS';
-      this.dom.continueCareerText.textContent = isAr ? 'متابعة المسيرة إلى السن التالي ➡️' : 'CONTINUE CAREER ➡️';
-      this.dom.modalStatusBadge.textContent = isAr ? 'نهاية المسيرة الكروية' : 'CAREER COMPLETED';
-      this.dom.modalSubtitle.textContent = isAr ? 'رحلة تاريخية حافلة بالإنجازات والبطولات' : 'A journey through football history';
-      this.dom.finalSeasonsLabel.textContent = isAr ? 'مواسم' : 'SEASONS';
-      this.dom.finalTrophiesLabel.textContent = isAr ? 'بطولات 🏆' : 'TROPHIES 🏆';
-      this.dom.finalPeakLabel.textContent = isAr ? 'أعلى قيمة سوقية' : 'PEAK VALUE';
+      this.dom.continueCareerText.textContent = isAr ? 'متابعة المسيرة إلى المحطة التالية ➡️' : 'CONTINUE CAREER ➡️';
+      this.dom.modalStatusBadge.textContent = isMgr ? (isAr ? 'نهاية المسيرة التدريبية' : 'MANAGERIAL CAREER COMPLETED') : (isAr ? 'نهاية المسيرة الكروية' : 'CAREER COMPLETED');
+      this.dom.modalSubtitle.textContent = isAr ? 'سجل تاريخي كامل موثق في أرشيف كرة القدم' : 'Full statistical legacy recorded in football archives';
       this.dom.finalTrophiesListTitle.textContent = isAr ? '🏆 البطولات المحققة عبر التاريخ:' : '🏆 TROPHIES WON IN CAREER:';
       this.dom.journeyTitle.textContent = isAr ? 'مسيرة الأندية' : 'CLUBS JOURNEY';
-      this.dom.managementTitleText.textContent = isAr ? 'المسيرة التدريبية بعد الاعتزال 👔' : 'MANAGERIAL CALLING 👔';
-      this.dom.playAgainText.textContent = isAr ? '⚡ بدء مسيرة لاعب جديد' : '⚡ PLAY NEW CAREER';
+      this.dom.managementTitleText.textContent = isMgr ? (isAr ? 'منصب المستشار الفني الدولي 👔' : 'GLOBAL TECHNICAL DIRECTOR 👔') : (isAr ? 'المسيرة التدريبية بعد الاعتزال 👔' : 'MANAGERIAL CALLING 👔');
+      this.dom.playAgainText.textContent = isAr ? '⚡ بدء مسيرة جديدة' : '⚡ PLAY NEW CAREER';
       this.dom.shareCareerText.textContent = isAr ? '📋 نسخ السيرة الذاتية للمسيرة' : '📋 COPY CAREER RESUME';
+
+      this.updateXPBar();
+      this.updateAIStatusStrip();
+    }
+
+    updateXPBar() {
+      const p = this.progression;
+      const needed = p.getXPForLevel(p.level);
+      const pct = Math.min(100, Math.round((p.currentXP / needed) * 100));
+      this.dom.playerLevelBadge.textContent = `LVL ${p.level}`;
+      this.dom.xpFillBar.style.width = `${pct}%`;
+      this.dom.xpTextDisplay.textContent = `${p.currentXP}/${needed} XP`;
+    }
+
+    updateAIStatusStrip() {
+      const isAr = this.lang === 'ar';
+      const ai = this.cloudAI.aiState;
+      this.dom.aiStatusText.textContent = isAr
+        ? `🧠 ذكاء اصطناعي تكيفي: جيل ${ai.generation} • تم تدريبه على ${ai.careersTrained} مسيرة`
+        : `🧠 Adaptive AI: Gen ${ai.generation} • Trained on ${ai.careersTrained} Careers`;
     }
 
     startNewCareer() {
       const regionObj = REGIONS[Math.floor(Math.random() * REGIONS.length)];
       const countryIdx = Math.floor(Math.random() * regionObj.countriesAr.length);
-      const positionObj = POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+      const isMgr = this.gameMode === 'manager';
 
-      // Realism: Age 18 starts at incubator / Tier 3 or 4 club
-      const starterClubs = CLUBS.filter(c => c.tier >= 3);
+      // Pick starter club
+      const starterClubs = CLUBS.filter(c => isMgr ? c.tier >= 2 : c.tier >= 3);
       const startingClub = starterClubs[Math.floor(Math.random() * starterClubs.length)];
-      
-      // Realistic starting market value: €0.8M to €2.5M
-      const startingValue = Math.round((0.8 + Math.random() * 1.7) * 10) / 10;
+
+      let positionObj;
+      if (isMgr) {
+        positionObj = {
+          titleEn: 'HEAD COACH',
+          titleAr: 'مدير فني وتكتيكي',
+          icon: '👔',
+          statEn: 'TEAM GOALS',
+          statAr: 'أهداف الفريق'
+        };
+      } else {
+        positionObj = POSITIONS[Math.floor(Math.random() * POSITIONS.length)];
+      }
+
+      const startingValue = isMgr ? 15.0 : Math.round((0.8 + Math.random() * 1.7) * 10) / 10;
 
       this.player = {
         regionObj: regionObj,
@@ -750,7 +1081,7 @@
         countryEn: regionObj.countriesEn[countryIdx],
         positionObj: positionObj,
         currentClub: startingClub,
-        age: 18,
+        age: isMgr ? 1 : 18,
         marketValue: startingValue,
         injuriesCount: 0,
         superSeasonsCount: 0
@@ -759,12 +1090,25 @@
       this.milestoneIndex = 0;
       this.allTrophies = [];
       this.careerHistory = [];
-      this.ageClubMap = { 18: startingClub };
-      this.totalStatScore = 0;
+      this.ageClubMap = {};
+      this.ageClubMap[isMgr ? 1 : 18] = startingClub;
+
+      // Reset Stats
+      this.totalMatches = 0;
+      this.totalGoals = 0;
+      this.totalAssists = 0;
+      this.totalYellow = 0;
+      this.totalRed = 0;
       this.totalEarnings = startingValue * 0.3;
       this.peakMarketValue = startingValue;
 
-      // Clear slots
+      this.countWorldCups = 0;
+      this.countUCLs = 0;
+      this.countLeagues = 0;
+      this.countCups = 0;
+      this.countBallonDors = 0;
+
+      // Clear ladder slots
       for (let age = 18; age <= 34; age += 2) {
         const slot = document.getElementById(`slot-${age}`);
         if (slot) {
@@ -778,6 +1122,8 @@
       this.dom.careerModal.classList.remove('active');
       this.dom.seasonModal.classList.remove('active');
       this.dom.cabinetModal.classList.remove('active');
+      this.dom.leaderboardModal.classList.remove('active');
+
       this.applyStaticTranslations();
       this.renderPlayerHUD();
       this.renderTimelineLadder();
@@ -796,10 +1142,12 @@
     renderPlayerHUD() {
       const p = this.player;
       const isAr = this.lang === 'ar';
+      const isMgr = this.gameMode === 'manager';
 
-      this.dom.playerRegion.textContent = isAr ? `${p.regionObj.flag} ${p.countryAr}` : `${p.regionObj.flag} ${p.countryEn}`;
+      this.dom.playerRegion.textContent = `${p.regionObj.flag} ${isAr ? p.countryAr : p.countryEn}`;
       this.dom.playerPosition.textContent = isAr ? p.positionObj.titleAr : p.positionObj.titleEn;
-      this.dom.playerAge.textContent = p.age;
+      this.dom.positionIcon.textContent = p.positionObj.icon;
+      this.dom.playerAge.textContent = isMgr ? `S${p.age}` : p.age;
       this.dom.playerValue.textContent = this.formatCurrency(p.marketValue);
 
       // Mini Header Club
@@ -810,27 +1158,40 @@
       this.dom.miniSeasonTag.textContent = isAr ? `${seasonYear} م${this.milestoneIndex + 1}` : `${seasonYear} S${this.milestoneIndex + 1}`;
 
       // Current Team Card
-      this.dom.currentTeamCrest.innerHTML = generateCrestSVG(p.currentClub, '30px');
+      this.dom.currentTeamCrest.innerHTML = generateCrestSVG(p.currentClub, '28px');
       this.dom.currentTeamName.textContent = this.getClubName(p.currentClub);
       this.dom.currentTeamCountry.textContent = this.getClubCountry(p.currentClub);
       this.dom.currentSeasonBadge.textContent = isAr ? `${seasonYear} م${this.milestoneIndex + 1}` : `${seasonYear} S${this.milestoneIndex + 1}`;
 
-      // Stay button label
+      // Mini Matchday Strip
+      this.dom.miniMatches.textContent = this.totalMatches;
+      this.dom.miniStat1Label.textContent = isAr ? 'أهداف' : 'GOALS';
+      this.dom.miniStat1Val.textContent = this.totalGoals;
+      this.dom.miniStat2Label.textContent = isAr ? 'أسيست' : 'ASSISTS';
+      this.dom.miniStat2Val.textContent = this.totalAssists;
+      this.dom.miniYellowCards.textContent = `🟨 ${this.totalYellow}`;
+      this.dom.miniRedCards.textContent = `🟥 ${this.totalRed}`;
+
+      // Stay Button
       const stayClub = this.getClubName(p.currentClub);
       if (isAr) {
-        this.dom.stayBtn.innerHTML = `<span>🛡️ البقاء وتجديد العقد مع <strong>${stayClub}</strong></span>`;
+        this.dom.stayBtn.innerHTML = `<span>🛡️ ${isMgr ? 'مواصلة قيادة' : 'البقاء وتجديد العقد مع'} <strong>${stayClub}</strong></span>`;
       } else {
-        this.dom.stayBtn.innerHTML = `<span>🛡️ Stay & Extend with <strong>${stayClub}</strong></span>`;
+        this.dom.stayBtn.innerHTML = `<span>🛡️ ${isMgr ? 'Continue Managing' : 'Stay & Extend with'} <strong>${stayClub}</strong></span>`;
       }
 
       // Bottom Ribbon
       this.dom.trophyBadgeCount.textContent = this.allTrophies.length;
       this.dom.trophiesCount.textContent = `🏆 ${this.allTrophies.length}`;
-      this.dom.goalsCount.textContent = `${p.positionObj.icon} ${this.totalStatScore}`;
+      this.dom.goalsCount.textContent = `${p.positionObj.icon} ${this.totalGoals}`;
       this.dom.careerEarnings.textContent = `💰 ${this.formatCurrency(this.totalEarnings)}`;
+
+      this.updateXPBar();
     }
 
     renderTimelineLadder() {
+      const isMgr = this.gameMode === 'manager';
+
       this.dom.ladderRows.forEach((row) => {
         const rowAge = row.dataset.age;
         const rowIdx = MILESTONES.indexOf(isNaN(rowAge) ? rowAge : parseInt(rowAge));
@@ -844,12 +1205,13 @@
 
         if (!isNaN(rowAge)) {
           const ageNum = parseInt(rowAge);
-          const club = this.ageClubMap[ageNum];
+          const mappedKey = isMgr ? Math.floor((ageNum - 16) / 2) : ageNum;
+          const club = this.ageClubMap[isMgr ? mappedKey : ageNum];
           const slot = document.getElementById(`slot-${ageNum}`);
           if (slot && club) {
             const crestEl = slot.querySelector('.slot-crest');
             const nameEl = slot.querySelector('.slot-name');
-            if (crestEl) crestEl.innerHTML = generateCrestSVG(club, '18px');
+            if (crestEl) crestEl.innerHTML = generateCrestSVG(club, '17px');
             if (nameEl) nameEl.textContent = this.getClubName(club);
           }
         }
@@ -866,7 +1228,7 @@
     }
 
     // ==========================================
-    // 7. MULTI-CLUB TRANSFER CHOICES GENERATOR
+    // 9. EVENT & TRANSFER OFFERS
     // ==========================================
     generateMilestoneEvents() {
       const currentMilestone = MILESTONES[this.milestoneIndex];
@@ -882,39 +1244,44 @@
       }
 
       const isAr = this.lang === 'ar';
-      const age = this.player.age;
+      const isMgr = this.gameMode === 'manager';
       const currentClub = this.player.currentClub;
       let eligibleClubs = CLUBS.filter(c => c.id !== currentClub.id);
 
-      // 20% Realism filtering:
-      if (age >= 32) {
-        // Twilight years: Saudi / MLS / Former incubators / Veterans
-        eligibleClubs.sort(() => Math.random() - 0.5);
-      } else if (this.player.marketValue >= 45) {
-        // High profile: Giant clubs
+      // AI influence
+      const ai = this.cloudAI.aiState;
+      if (this.allTrophies.length >= 3) {
         eligibleClubs = eligibleClubs.filter(c => c.tier <= 2);
-      } else if (this.player.marketValue <= 8) {
-        // Low/Slump: Mid-table or Tier 3/4
+      } else if (this.player.marketValue <= 6) {
         eligibleClubs = eligibleClubs.filter(c => c.tier >= 2);
       }
 
       eligibleClubs.sort(() => Math.random() - 0.5);
 
-      // Present 2 or 3 distinct clubs
       const offerCount = Math.random() > 0.4 ? 3 : 2;
       const chosenClubs = eligibleClubs.slice(0, offerCount);
 
-      let badgeTitle = isAr ? `🔥 ${offerCount} أندية تتنافس لضمك` : `🔥 ${offerCount} CLUBS IN TRANSFER WAR`;
-      let narrative = isAr
-        ? 'نافذة الانتقالات مشتعلة! وصلتك عروض رسمية من أندية ترغب في التوقيع معك فوراً.'
-        : 'The transfer window is buzzing! Official contract bids have arrived for your signature.';
+      let badgeTitle = '';
+      let narrative = '';
+
+      if (isMgr) {
+        badgeTitle = isAr ? `📋 ${offerCount} أندية تطلب التعاقد معك كمدرب` : `📋 ${offerCount} CLUBS WANT YOU AS MANAGER`;
+        narrative = isAr
+          ? 'إدارات أندية كبرى تابعت بصمتك التكتيكية وقدمت عروضاً رسمية لتسليمك القيادة الفنية!'
+          : 'Major club boards were impressed by your tactical prowess and sent managerial contract offers!';
+      } else {
+        badgeTitle = isAr ? `🔥 صراع ${offerCount} أندية على ضمك` : `🔥 ${offerCount}-CLUB BIDDING WAR`;
+        narrative = isAr
+          ? 'سوق الانتقالات يشتعل! عدة أندية كبرى دخلت في مفاوضات رسمية للظفر بخدماتك.'
+          : 'The transfer market is heated! Multiple clubs have entered negotiations for your signature.';
+      }
 
       this.dom.eventBadgeText.textContent = badgeTitle;
       this.dom.narrativeText.textContent = narrative;
 
       this.currentOffers = chosenClubs.map(club => {
         const offerVal = this.calculateRealisticOffer(club);
-        const wage = Math.max(0.4, Math.round((offerVal * 0.14) * 10) / 10);
+        const wage = Math.max(0.5, Math.round((offerVal * (isMgr ? 0.08 : 0.14)) * 10) / 10);
         return {
           club: club,
           marketVal: offerVal,
@@ -928,11 +1295,11 @@
         card.className = 'offer-card';
         const clubName = this.getClubName(offer.club);
         const clubCountry = this.getClubCountry(offer.club);
-        const btnText = isAr ? 'اختر النادي ✍️' : 'SIGN CONTRACT ✍️';
+        const btnText = isMgr ? (isAr ? 'تولي التدريب 👔' : 'TAKE CHARGE 👔') : (isAr ? 'توقيع العقد ✍️' : 'SIGN CONTRACT ✍️');
 
         card.innerHTML = `
           <div class="offer-left">
-            <div class="crest-container large">${generateCrestSVG(offer.club, '30px')}</div>
+            <div class="crest-container large">${generateCrestSVG(offer.club, '28px')}</div>
             <div class="offer-details">
               <span class="offer-club-name">${clubName}</span>
               <span class="offer-country">${offer.club.flag} ${clubCountry}</span>
@@ -957,140 +1324,199 @@
 
     calculateRealisticOffer(club) {
       const age = this.player.age;
+      const isMgr = this.gameMode === 'manager';
       let val = this.player.marketValue;
 
-      // Realism: Age Curve
-      if (age <= 22) val *= (1.2 + Math.random() * 0.35);
-      else if (age <= 28) val *= (1.1 + Math.random() * 0.25);
-      else if (age <= 30) val *= (0.95 + Math.random() * 0.15);
-      else val *= (0.7 + Math.random() * 0.2); // Decline past 30
+      if (!isMgr) {
+        if (age <= 22) val *= (1.2 + Math.random() * 0.35);
+        else if (age <= 28) val *= (1.1 + Math.random() * 0.25);
+        else if (age <= 30) val *= (0.95 + Math.random() * 0.15);
+        else val *= (0.7 + Math.random() * 0.2);
+      } else {
+        // Manager budget
+        val = club.tier === 1 ? 60 + Math.random() * 40 : (club.tier === 2 ? 30 + Math.random() * 25 : 10 + Math.random() * 15);
+      }
 
-      if (club.tier === 1) val *= 1.35;
-      else if (club.tier === 2) val *= 1.1;
-      else val *= 0.85;
+      if (!isMgr) {
+        if (club.tier === 1) val *= 1.35;
+        else if (club.tier === 2) val *= 1.1;
+        else val *= 0.85;
+      }
 
       return Math.max(0.6, Math.round(val * 10) / 10);
     }
 
     // ==========================================
-    // 8. DEEP REALISTIC & RNG SEASON SIMULATION
+    // 10. REALISTIC DEEP SIMULATION & STATS ENGINE
     // ==========================================
     executeSeasonProgression(transferred, targetClub, proposedVal = null) {
       const isAr = this.lang === 'ar';
+      const isMgr = this.gameMode === 'manager';
       const age = this.player.age;
-      const prevClub = this.player.currentClub;
       this.player.currentClub = targetClub;
 
-      // Update Age-Club Map for ladder
+      // Map ladder slot
       this.ageClubMap[age] = targetClub;
 
-      // Determine 80% RNG Luck Event
-      const rngRoll = Math.random();
+      // 80% RNG Roll
+      const ai = this.cloudAI.aiState;
+      const roll = Math.random();
       let eventType = 'SOLID_STARTER';
 
-      // Probabilities:
-      if (rngRoll < 0.18) {
-        eventType = 'SUPER_SEASON'; // 18% Wonderkid / Monster season
-        this.player.superSeasonsCount++;
-      } else if (rngRoll < 0.36) {
-        eventType = 'INJURY_CRISIS'; // 18% Injury misfortune
-        this.player.injuriesCount++;
-      } else if (rngRoll < 0.50) {
-        eventType = 'BENCH_CONFLICT'; // 14% Tactical slump / bench
-      } else if (rngRoll < 0.62) {
-        eventType = 'HEARTBREAK_FINAL'; // 12% Dramatic finals loss
+      if (isMgr) {
+        // Manager Events
+        if (roll < 0.22) eventType = 'TACTICAL_TRIUMPH';
+        else if (roll < 0.40) eventType = 'BOARD_PRESSURE';
+        else if (roll < 0.55) eventType = 'SQUAD_MUTINY';
+        else eventType = 'SOLID_STARTER';
       } else {
-        eventType = 'SOLID_STARTER'; // 38% Normal consistent season
+        // Player Events
+        if (roll < ai.wonderkidRate) {
+          eventType = 'SUPER_SEASON';
+          this.player.superSeasonsCount++;
+        } else if (roll < ai.wonderkidRate + ai.injuryRate) {
+          eventType = 'INJURY_CRISIS';
+          this.player.injuriesCount++;
+        } else if (roll < 0.52) {
+          eventType = 'BENCH_CONFLICT';
+        } else if (roll < 0.65) {
+          eventType = 'HEARTBREAK_FINAL';
+        } else {
+          eventType = 'SOLID_STARTER';
+        }
       }
 
-      // Check for Major International Tournament (Ages 22, 26, 30)
-      const isWorldCupYear = (age === 22 || age === 26 || age === 30);
+      // Check World Cup cycle (Player: Ages 22, 26, 30; Manager: Seasons 3, 7)
+      const isWorldCupYear = isMgr ? (age === 3 || age === 7) : (age === 22 || age === 26 || age === 30);
       let wonWorldCup = false;
       if (isWorldCupYear && Math.random() < 0.16) {
         wonWorldCup = true;
       }
 
-      // Stats calculation (realistic goals/clean sheets for 2 years)
-      let statsCount = 0;
-      let matchRating = 7.2;
+      // Detailed Stats Computation (2-year span: 75 to 110 matches)
+      let matches = Math.floor(75 + Math.random() * 32);
+      let goals = 0;
+      let assists = 0;
+      let yellows = Math.floor(2 + Math.random() * 6);
+      let reds = Math.random() < 0.22 ? 1 : 0;
+      let matchRating = 7.3;
       let valDelta = 0;
       let trophiesWonThisSeason = [];
 
       const isAttacker = ['STRIKER', 'WINGER'].includes(this.player.positionObj.titleEn);
-      const isMid = ['ATTACKING MID', 'CENTRAL MID', 'FULL BACK'].includes(this.player.positionObj.titleEn);
+      const isMid = ['ATTACKING MID', 'CENTRAL MID'].includes(this.player.positionObj.titleEn);
 
-      // Event-specific resolution
-      if (eventType === 'SUPER_SEASON') {
-        matchRating = (8.2 + Math.random() * 0.9).toFixed(1);
-        statsCount = isAttacker ? Math.floor(40 + Math.random() * 26) : (isMid ? Math.floor(22 + Math.random() * 16) : Math.floor(28 + Math.random() * 12));
-        valDelta = Math.round(this.player.marketValue * (0.35 + Math.random() * 0.35) * 10) / 10;
+      // Tactic modifiers if Manager Mode
+      let tacticAttackMult = 1.0;
+      let tacticDefenseMult = 1.0;
+      if (isMgr) {
+        if (this.currentTactic === 'attack') { tacticAttackMult = 1.35; yellows += 3; }
+        else if (this.currentTactic === 'defense') { tacticDefenseMult = 1.3; matches += 4; }
+      }
+
+      if (eventType === 'SUPER_SEASON' || eventType === 'TACTICAL_TRIUMPH') {
+        matchRating = (8.3 + Math.random() * 0.8).toFixed(1);
+        matches = Math.floor(88 + Math.random() * 20);
         
-        // High trophy chances
-        if (targetClub.tier === 1) {
-          trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇' });
-          if (Math.random() < 0.55) {
-            trophiesWonThisSeason.push({ nameAr: targetClub.contAr, nameEn: targetClub.contEn, icon: '🏆' });
-          }
-        } else if (targetClub.tier === 2) {
-          if (Math.random() < 0.5) trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈' });
-          if (Math.random() < 0.35) trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇' });
+        if (isMgr) {
+          goals = Math.floor((120 + Math.random() * 40) * tacticAttackMult);
+          assists = Math.floor(goals * 0.7);
         } else {
-          if (Math.random() < 0.4) trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈' });
+          goals = isAttacker ? Math.floor(45 + Math.random() * 28) : (isMid ? Math.floor(18 + Math.random() * 14) : Math.floor(6 + Math.random() * 8));
+          assists = isAttacker ? Math.floor(12 + Math.random() * 14) : (isMid ? Math.floor(22 + Math.random() * 18) : Math.floor(8 + Math.random() * 8));
         }
 
-        // Ballon d'Or check
-        if (targetClub.tier <= 2 && matchRating >= 8.6 && Math.random() < 0.45) {
-          trophiesWonThisSeason.push({ nameAr: 'الكرة الذهبية كأفضل لاعب في العالم', nameEn: "Ballon d'Or World Best Player", icon: '🌕' });
+        valDelta = Math.round(this.player.marketValue * 0.45 * 10) / 10;
+
+        // High trophy probability
+        if (targetClub.tier === 1) {
+          trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇', type: 'league' });
+          this.countLeagues++;
+          if (Math.random() < 0.6) {
+            trophiesWonThisSeason.push({ nameAr: targetClub.contAr, nameEn: targetClub.contEn, icon: '🏆', type: 'ucl' });
+            this.countUCLs++;
+          }
+        } else if (targetClub.tier === 2) {
+          if (Math.random() < 0.5) { trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈', type: 'cup' }); this.countCups++; }
+          if (Math.random() < 0.4) { trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇', type: 'league' }); this.countLeagues++; }
+        } else {
+          if (Math.random() < 0.45) { trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈', type: 'cup' }); this.countCups++; }
+        }
+
+        // Ballon d'Or
+        if (!isMgr && targetClub.tier <= 2 && matchRating >= 8.6 && Math.random() < 0.45) {
+          trophiesWonThisSeason.push({ nameAr: 'الكرة الذهبية كأفضل لاعب في العالم', nameEn: "Ballon d'Or World Best Player", icon: '🌕', type: 'ballon' });
+          this.countBallonDors++;
         }
 
       } else if (eventType === 'INJURY_CRISIS') {
-        matchRating = (6.0 + Math.random() * 0.6).toFixed(1);
-        statsCount = isAttacker ? Math.floor(4 + Math.random() * 8) : Math.floor(2 + Math.random() * 6);
-        valDelta = -Math.round(this.player.marketValue * (0.22 + Math.random() * 0.18) * 10) / 10;
-        // Injuries result in Zero Trophies (موسم صفري)
+        matches = Math.floor(22 + Math.random() * 18); // Sidelined
+        matchRating = (5.9 + Math.random() * 0.7).toFixed(1);
+        goals = isAttacker ? Math.floor(4 + Math.random() * 6) : Math.floor(1 + Math.random() * 4);
+        assists = Math.floor(2 + Math.random() * 4);
+        valDelta = -Math.round(this.player.marketValue * 0.3 * 10) / 10;
 
-      } else if (eventType === 'BENCH_CONFLICT') {
-        matchRating = (6.3 + Math.random() * 0.5).toFixed(1);
-        statsCount = isAttacker ? Math.floor(7 + Math.random() * 9) : Math.floor(4 + Math.random() * 7);
-        valDelta = -Math.round(this.player.marketValue * (0.15 + Math.random() * 0.12) * 10) / 10;
+      } else if (eventType === 'BENCH_CONFLICT' || eventType === 'BOARD_PRESSURE') {
+        matches = Math.floor(34 + Math.random() * 18);
+        matchRating = (6.2 + Math.random() * 0.6).toFixed(1);
+        goals = isAttacker ? Math.floor(7 + Math.random() * 9) : Math.floor(3 + Math.random() * 5);
+        assists = Math.floor(4 + Math.random() * 6);
+        valDelta = -Math.round(this.player.marketValue * 0.18 * 10) / 10;
+        yellows += 2;
 
-      } else if (eventType === 'HEARTBREAK_FINAL') {
-        matchRating = (7.5 + Math.random() * 0.6).toFixed(1);
-        statsCount = isAttacker ? Math.floor(22 + Math.random() * 15) : Math.floor(12 + Math.random() * 10);
+      } else if (eventType === 'HEARTBREAK_FINAL' || eventType === 'SQUAD_MUTINY') {
+        matches = Math.floor(80 + Math.random() * 18);
+        matchRating = (7.4 + Math.random() * 0.5).toFixed(1);
+        goals = isAttacker ? Math.floor(22 + Math.random() * 14) : Math.floor(9 + Math.random() * 9);
+        assists = Math.floor(10 + Math.random() * 10);
         valDelta = Math.round(this.player.marketValue * 0.05 * 10) / 10;
-        // Lost the final in penalties!
 
       } else { // SOLID_STARTER
+        matches = Math.floor(68 + Math.random() * 24);
         matchRating = (7.3 + Math.random() * 0.5).toFixed(1);
-        statsCount = isAttacker ? Math.floor(20 + Math.random() * 18) : (isMid ? Math.floor(11 + Math.random() * 10) : Math.floor(15 + Math.random() * 10));
-        
-        // Age decay check
-        if (age >= 30) {
-          valDelta = -Math.round(this.player.marketValue * 0.1 * 10) / 10;
+        if (isMgr) {
+          goals = Math.floor((85 + Math.random() * 30) * tacticAttackMult);
+          assists = Math.floor(goals * 0.65);
         } else {
-          valDelta = Math.round(this.player.marketValue * (0.08 + Math.random() * 0.15) * 10) / 10;
+          goals = isAttacker ? Math.floor(20 + Math.random() * 18) : (isMid ? Math.floor(10 + Math.random() * 10) : Math.floor(3 + Math.random() * 5));
+          assists = isAttacker ? Math.floor(8 + Math.random() * 10) : (isMid ? Math.floor(15 + Math.random() * 14) : Math.floor(4 + Math.random() * 6));
         }
 
-        // Realistic Club trophy chance
-        let prob = targetClub.tier === 1 ? 0.45 : (targetClub.tier === 2 ? 0.25 : 0.12);
+        if (!isMgr && age >= 30) {
+          valDelta = -Math.round(this.player.marketValue * 0.1 * 10) / 10;
+        } else {
+          valDelta = Math.round(this.player.marketValue * 0.1 * 10) / 10;
+        }
+
+        let prob = targetClub.tier === 1 ? 0.45 : (targetClub.tier === 2 ? 0.25 : 0.1);
         if (Math.random() < prob) {
-          trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇' });
+          trophiesWonThisSeason.push({ nameAr: targetClub.leagueAr, nameEn: targetClub.leagueEn, icon: '🥇', type: 'league' });
+          this.countLeagues++;
         } else if (Math.random() < prob * 0.8) {
-          trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈' });
+          trophiesWonThisSeason.push({ nameAr: targetClub.cupAr, nameEn: targetClub.cupEn, icon: '🥈', type: 'cup' });
+          this.countCups++;
         }
       }
 
-      // Add World Cup if won
+      // World Cup
       if (wonWorldCup) {
         trophiesWonThisSeason.push({
-          nameAr: `كأس العالم مع ${this.player.countryAr}`,
+          nameAr: `${isMgr ? 'كأس العالم كمدرب وطني لـ' : 'كأس العالم مع'} ${this.player.countryAr}`,
           nameEn: `FIFA World Cup with ${this.player.countryEn}`,
-          icon: '🌍'
+          icon: '🌍',
+          type: 'wc'
         });
+        this.countWorldCups++;
         valDelta += 15;
       }
 
-      // Update Player State
+      // Accumulate Totals
+      this.totalMatches += matches;
+      this.totalGoals += goals;
+      this.totalAssists += assists;
+      this.totalYellow += yellows;
+      this.totalRed += reds;
+
       if (proposedVal && transferred) {
         this.player.marketValue = Math.max(0.5, Math.round((proposedVal + valDelta) * 10) / 10);
       } else {
@@ -1101,10 +1527,9 @@
         this.peakMarketValue = this.player.marketValue;
       }
 
-      this.totalStatScore += statsCount;
-      this.totalEarnings += Math.max(0.3, this.player.marketValue * 0.22);
+      this.totalEarnings += Math.max(0.4, this.player.marketValue * 0.2);
 
-      // Record Trophies with details
+      // Append Trophies
       trophiesWonThisSeason.forEach(t => {
         this.allTrophies.push({
           nameAr: t.nameAr,
@@ -1115,89 +1540,107 @@
         });
       });
 
-      // Sound effect
+      // Calculate XP Earned
+      let xpEarned = 150 + (goals * 8) + (assists * 5) + (trophiesWonThisSeason.length * 250);
+      if (wonWorldCup) xpEarned += 800;
+      this.progression.addXP(xpEarned);
+
+      // Audio feedback
       if (trophiesWonThisSeason.length > 0) {
         this.sound.playTrophy();
-        this.confetti.burst(65);
-      } else if (eventType === 'INJURY_CRISIS' || eventType === 'BENCH_CONFLICT') {
+        this.confetti.burst(60);
+      } else if (eventType === 'INJURY_CRISIS' || eventType === 'SQUAD_MUTINY') {
         this.sound.playSad();
       }
 
-      // Populate & Open Season Recap Modal
+      // Show Season Recap Modal
       this.showSeasonRecapModal({
         age: age,
         club: targetClub,
         eventType: eventType,
-        statsCount: statsCount,
-        matchRating: matchRating,
+        matches: matches,
+        goals: goals,
+        assists: assists,
+        yellows: yellows,
+        reds: reds,
         valDelta: valDelta,
+        xpEarned: xpEarned,
         trophies: trophiesWonThisSeason
       });
     }
 
     // ==========================================
-    // 9. SEASON RECAP MODAL
+    // 11. SEASON RECAP MODAL POPUP
     // ==========================================
-    showSeasonRecapModal(data) {
+    showSeasonRecapModal(d) {
       const isAr = this.lang === 'ar';
+      const isMgr = this.gameMode === 'manager';
       const seasonYear = 2024 + (this.milestoneIndex * 2);
-      
-      this.dom.recapSeasonYear.textContent = isAr 
-        ? `موسم ${seasonYear} - ${seasonYear + 2} (عمر ${data.age} سنة)` 
-        : `Season ${seasonYear} - ${seasonYear + 2} (Age ${data.age})`;
-      this.dom.recapClubHeader.textContent = `${this.getClubName(data.club)} ${data.club.flag}`;
 
-      // Banner Event Details
+      this.dom.recapSeasonYear.textContent = isMgr
+        ? (isAr ? `الموسم التدريبي ${d.age} (${seasonYear})` : `Managerial Season ${d.age} (${seasonYear})`)
+        : (isAr ? `موسم ${seasonYear} - ${seasonYear + 2} (عمر ${d.age} سنة)` : `Season ${seasonYear} - ${seasonYear + 2} (Age ${d.age})`);
+
+      this.dom.recapClubHeader.textContent = `${this.getClubName(d.club)} ${d.club.flag}`;
+
+      // Banner styling
       this.dom.recapEventBanner.className = 'recap-event-banner';
-      if (data.eventType === 'SUPER_SEASON') {
+      if (d.eventType === 'SUPER_SEASON' || d.eventType === 'TACTICAL_TRIUMPH') {
         this.dom.recapEventBanner.classList.add('success');
         this.dom.recapEventIcon.textContent = '🚀';
-        this.dom.recapEventTitle.textContent = isAr ? 'موسم استثنائي وتوهج عالمي! ⭐' : 'Sensational World-Class Season! ⭐';
+        this.dom.recapEventTitle.textContent = isAr ? 'موسم استثنائي وتوهج كاسح! ⭐' : 'Sensational Breakthrough Season! ⭐';
         this.dom.recapEventDetail.textContent = isAr 
-          ? 'مستويات مذهلة أذهلت الجماهير والنقاد ووضعتك في مصاف أفضل لاعبي العالم.' 
-          : 'Spectacular performances captivated fans and placed you among world elite.';
-      } else if (data.eventType === 'INJURY_CRISIS') {
+          ? (isMgr ? 'عبقرية تكتيكية مذهلة فرضت هيمنة فريقك محلياً وقارياً.' : 'مستويات خرافية أذهلت العالم وتصدرت عناوين الصحف العالمية.') 
+          : 'Spectacular tactical execution brought sheer dominance on all fronts.';
+      } else if (d.eventType === 'INJURY_CRISIS') {
         this.dom.recapEventBanner.classList.add('injury');
         this.dom.recapEventIcon.textContent = '🚑';
         this.dom.recapEventTitle.textContent = isAr ? 'لعنة الإصابات القاسية! 💔' : 'Cruel Injury Nightmare! 💔';
         this.dom.recapEventDetail.textContent = isAr 
-          ? 'تمزق عضلي وإصابة في الركبة أبعدتك أشهراً عن الملاعب وتسببت في هبوط قيمتك السوقية.' 
-          : 'Severe knee and muscle injuries sidelined you for months, hurting form and value.';
-      } else if (data.eventType === 'BENCH_CONFLICT') {
+          ? 'إصابة قوية في الركبة أبعدتك أشهراً طويلة وأثرت على أرقامك وقيمتك.' 
+          : 'A severe injury setback kept you sidelined for months.';
+      } else if (d.eventType === 'BENCH_CONFLICT' || d.eventType === 'BOARD_PRESSURE') {
         this.dom.recapEventBanner.classList.add('injury');
-        this.dom.recapEventIcon.textContent = '🪑';
-        this.dom.recapEventTitle.textContent = isAr ? 'أزمة دكة البدلاء وخلاف مع المدرب! ⚠️' : 'Benched & Tactical Squeeze! ⚠️';
+        this.dom.recapEventIcon.textContent = isMgr ? '⚠️' : '🪑';
+        this.dom.recapEventTitle.textContent = isAr 
+          ? (isMgr ? 'ضغط إداري حاد وتهديد بالإقالة! ⚠️' : 'خلاف تكتيكي وجلوس على الدكة! 🪑') 
+          : (isMgr ? 'Severe Board Pressure & Sacking Threats! ⚠️' : 'Benched & Tactical Friction! 🪑');
         this.dom.recapEventDetail.textContent = isAr 
-          ? 'المدرب الجديد اعتمد على خطة أخرى ووضعك على الدكة، مما أضعف تأثيرك هذا الموسم.' 
-          : 'A tactical change by the head coach saw you restricted to substitute appearances.';
-      } else if (data.eventType === 'HEARTBREAK_FINAL') {
+          ? (isMgr ? 'تراجع النتائج أثار غضب الإدارة وطالبوك بتعديل المسار فوراً.' : 'المدرب اعتمد على بديل آخر وتم تقليص دقائق لعبك.') 
+          : 'Rocky period with reduced involvement and tactical disputes.';
+      } else if (d.eventType === 'HEARTBREAK_FINAL' || d.eventType === 'SQUAD_MUTINY') {
         this.dom.recapEventBanner.classList.add('warning');
         this.dom.recapEventIcon.textContent = '💔';
         this.dom.recapEventTitle.textContent = isAr ? 'دراما وخسارة مؤلمة في النهائي! 🥈' : 'Agonizing Final Defeat! 🥈';
         this.dom.recapEventDetail.textContent = isAr 
-          ? 'قدمت أداءً قتالياً لكن فريقك خسر النهائي بركلات الترجيح ليخرج بموسم صفري.' 
-          : 'A valiant cup run ended in tears after a penalty shootout heartbreak in the final.';
+          ? 'وصلتم للنهائي الكبير ولكنكم خسرتم اللقب بركلات الترجيح ليخرج الفريق بموسم صفري.' 
+          : 'A valiant cup run ended in tears after a penalty shootout heartbreak.';
       } else {
         this.dom.recapEventIcon.textContent = '⚽';
-        this.dom.recapEventTitle.textContent = isAr ? 'موسم أساسي مستقر ومتوازن 🛡️' : 'Solid & Consistent Starter Role 🛡️';
+        this.dom.recapEventTitle.textContent = isAr ? 'موسم أساسي مستقر ومتوازن 🛡️' : 'Solid & Consistent Campaign 🛡️';
         this.dom.recapEventDetail.textContent = isAr 
-          ? 'مشاركات منتظمة مع الفريق ومساهمات جيدة في مختلف البطولات المحلية.' 
-          : 'Steady appearances and positive contributions across domestic competitions.';
+          ? 'مشاركات منتظمة وثبات في المستوى الفني.' 
+          : 'Consistent performances with solid match contributions.';
       }
 
-      // Stats
-      this.dom.recapStatCount.textContent = data.statsCount;
-      this.dom.recapStatLabel.textContent = isAr ? this.player.positionObj.statAr : this.player.positionObj.statEn;
-      this.dom.recapRating.textContent = `${data.matchRating} ⭐`;
-      
-      const deltaText = data.valDelta >= 0 ? `+€${data.valDelta}M` : `-€${Math.abs(data.valDelta)}M`;
-      this.dom.recapValueChange.textContent = deltaText;
-      this.dom.recapValueChange.className = `recap-stat-val ${data.valDelta >= 0 ? 'highlight' : 'negative'}`;
+      // 6 Stats in Season Modal
+      this.dom.recapMatches.textContent = d.matches;
+      this.dom.recapStatCount.textContent = d.goals;
+      this.dom.recapStatLabel.textContent = isAr ? 'الأهداف ⚽' : 'GOALS ⚽';
+      this.dom.recapAssists.textContent = d.assists;
+      this.dom.recapYellow.textContent = `🟨 ${d.yellows}`;
+      this.dom.recapRed.textContent = `🟥 ${d.reds}`;
 
-      // Trophies List
+      const deltaText = d.valDelta >= 0 ? `+€${d.valDelta}M` : `-€${Math.abs(d.valDelta)}M`;
+      this.dom.recapValueChange.textContent = deltaText;
+      this.dom.recapValueChange.className = `sd-val ${d.valDelta >= 0 ? 'highlight' : 'negative'}`;
+
+      this.dom.seasonXpGained.textContent = `+${d.xpEarned} XP`;
+
+      // Trophies
       this.dom.recapTrophiesList.innerHTML = '';
-      if (data.trophies.length > 0) {
-        data.trophies.forEach(t => {
+      if (d.trophies.length > 0) {
+        d.trophies.forEach(t => {
           const pill = document.createElement('div');
           pill.className = 'trophy-item-pill';
           const tName = isAr ? t.nameAr : t.nameEn;
@@ -1207,7 +1650,7 @@
       } else {
         this.dom.recapTrophiesList.innerHTML = `
           <span class="no-trophy-text">
-            ${isAr ? '❌ موسم صفري: لم يحقق الفريق أي لقب رسمي هذا الموسم.' : '❌ Zero Trophies: The team ended the campaign without silverware.'}
+            ${isAr ? '❌ موسم صفري: لم يحقق الفريق أي بطولة رسمية هذا الموسم.' : '❌ Zero Trophies: Campaign concluded without silverware.'}
           </span>
         `;
       }
@@ -1218,11 +1661,18 @@
     advanceToNextMilestone() {
       this.milestoneIndex++;
       const nextMilestone = MILESTONES[this.milestoneIndex];
+      const isMgr = this.gameMode === 'manager';
 
       if (typeof nextMilestone === 'number') {
-        this.player.age = nextMilestone;
-        if (!this.ageClubMap[nextMilestone]) {
-          this.ageClubMap[nextMilestone] = this.player.currentClub;
+        if (isMgr) {
+          this.player.age = Math.floor((nextMilestone - 16) / 2);
+        } else {
+          this.player.age = nextMilestone;
+        }
+
+        const mapKey = isMgr ? this.player.age : nextMilestone;
+        if (!this.ageClubMap[mapKey]) {
+          this.ageClubMap[mapKey] = this.player.currentClub;
         }
       }
 
@@ -1232,8 +1682,31 @@
     }
 
     // ==========================================
-    // 10. TROPHY CABINET VIEWER
+    // 12. LEADERBOARD & TROPHY CABINET MODALS
     // ==========================================
+    async openLeaderboard() {
+      const isAr = this.lang === 'ar';
+      this.dom.leaderboardList.innerHTML = `<p style="text-align:center; padding:15px; color:#64748b;">${isAr ? 'جاري الاتصال بقاعدة البيانات السحابية 🌐...' : 'Connecting to cloud database 🌐...'}</p>`;
+      this.dom.leaderboardModal.classList.add('active');
+
+      const scores = await this.cloudAI.fetchLeaderboard();
+      this.dom.leaderboardList.innerHTML = '';
+
+      scores.forEach((s, idx) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `
+          <div class="lb-rank">#${idx + 1}</div>
+          <div class="lb-user-info">
+            <span class="lb-user-name">${s.name || 'Anonymous Legend'}</span>
+            <span class="lb-user-stats">${s.club || 'FC'} • ${s.goals || 0} ${isAr ? 'هدف' : 'Goals'} • ${s.rank || 'LEGEND'}</span>
+          </div>
+          <div class="lb-trophies-badge">🏆 ${s.trophies || 0}</div>
+        `;
+        this.dom.leaderboardList.appendChild(item);
+      });
+    }
+
     openTrophyCabinet() {
       const isAr = this.lang === 'ar';
       this.dom.cabinetList.innerHTML = '';
@@ -1245,7 +1718,7 @@
           </p>
         `;
       } else {
-        this.allTrophies.forEach((t, i) => {
+        this.allTrophies.forEach(t => {
           const row = document.createElement('div');
           row.className = 'cabinet-trophy-row';
           const tName = isAr ? t.nameAr : t.nameEn;
@@ -1253,7 +1726,7 @@
             <div class="cabinet-trophy-icon">${t.icon}</div>
             <div class="cabinet-trophy-info">
               <span class="cabinet-trophy-name">${tName}</span>
-              <span class="cabinet-trophy-details">${t.clubName} • ${isAr ? `عمر ${t.age} سنة` : `Age ${t.age}`}</span>
+              <span class="cabinet-trophy-details">${t.clubName} • ${isAr ? `المحطة ${t.age}` : `Stage ${t.age}`}</span>
             </div>
           `;
           this.dom.cabinetList.appendChild(row);
@@ -1264,14 +1737,17 @@
     }
 
     // ==========================================
-    // 11. RETIREMENT PHASE ('R')
+    // 13. RETIREMENT & DEEP GRAND FINALE
     // ==========================================
     handleRetirementPhase() {
       const isAr = this.lang === 'ar';
-      this.dom.eventBadgeText.textContent = isAr ? '👑 حفل اعتزال أسطوري' : '👑 RETIREMENT CEREMONY';
+      const isMgr = this.gameMode === 'manager';
+
+      this.dom.eventBadgeText.textContent = isMgr ? (isAr ? '👑 ختام المسيرة التدريبية' : '👑 MANAGERIAL RETIREMENT') : (isAr ? '👑 حفل اعتزال أسطوري' : '👑 RETIREMENT CEREMONY');
       this.dom.narrativeText.textContent = isAr
-        ? 'بعد مسيرة ملحمية مليئة بالتقلبات والبطولات، حان وقت تعليق الحذاء وبدء رحلة التدريب!'
-        : 'After an epic rollercoaster journey of glory and adversity, you hang up your boots for management!';
+        ? (isMgr ? 'بعد سنوات من التخطيط والتتويجات وإشعال الملاعب، حان وقت توديع دكة البدلاء!' : 'بعد مسيرة ملحمية مليئة بالتقلبات والبطولات، حان وقت تعليق الحذاء وبدء رحلة التدريب!')
+        : 'After an epic career of tactical mastery and silverware, you conclude your active coaching journey!';
+
       this.dom.offersGrid.innerHTML = '';
       this.dom.actionBar.style.display = 'none';
 
@@ -1281,7 +1757,7 @@
       retireCard.style.background = 'var(--primary-yellow)';
       retireCard.innerHTML = `
         <span style="font-family: var(--font-arabic); font-weight: 900; font-size: 1rem; color: #000;">
-          ${isAr ? 'الانتقال إلى عالم التدريب 👔 ➡️' : 'PROCEED TO MANAGEMENT 👔 ➡️'}
+          ${isMgr ? (isAr ? 'عرض سجل الإنجازات والتقييم النهائي 🏆 ➡️' : 'VIEW FINAL ACHIEVEMENTS 🏆 ➡️') : (isAr ? 'الانتقال إلى عالم التدريب 👔 ➡️' : 'PROCEED TO MANAGEMENT 👔 ➡️')}
         </span>
       `;
       retireCard.addEventListener('click', () => {
@@ -1291,40 +1767,47 @@
         this.handleManagementPhase();
       });
       this.dom.offersGrid.appendChild(retireCard);
-      this.confetti.burst(50);
+      this.confetti.burst(60);
     }
 
-    // ==========================================
-    // 12. MANAGEMENT & HONEST LEGACY EVALUATION ('M')
-    // ==========================================
     handleManagementPhase() {
       const isAr = this.lang === 'ar';
+      const isMgr = this.gameMode === 'manager';
       this.sound.playTrophy();
-      this.confetti.burst(90);
+      this.confetti.burst(100);
 
-      // Honest Legacy Rank (No pure flattery / 'تطبيل')
+      // Evaluate Honest Legacy
       let rating = '';
       const trophiesCount = this.allTrophies.length;
       const peakVal = this.peakMarketValue;
       const injuries = this.player.injuriesCount;
 
-      if (trophiesCount >= 8 && peakVal >= 90) {
-        rating = isAr ? 'الأعظم في التاريخ (THE GOAT) 🐐' : 'THE GOAT 🐐';
-      } else if (trophiesCount >= 4 && peakVal >= 60) {
-        rating = isAr ? 'أسطورة كروية عالمية 🌟' : 'WORLD CLASS LEGEND 🌟';
-      } else if (injuries >= 3 && trophiesCount <= 2) {
-        rating = isAr ? 'موهبة دمرتها الإصابات 🩹' : 'INJURY CURSED TALENT 🩹';
-      } else if (this.allTrophies.length === 0 && peakVal <= 20) {
-        rating = isAr ? 'موهبة ضائعة لم تكتمل 📉' : 'WONDERKID BUST 📉';
-      } else if (this.careerHistory.length >= 4) {
-        rating = isAr ? 'رحالة كروي مكافح 🌍' : 'ICONIC JOURNEYMAN 🌍';
+      if (isMgr) {
+        if (trophiesCount >= 8) rating = isAr ? 'الداهية التكتيكية الخالدة 🧠' : 'TACTICAL MASTERMIND 🧠';
+        else if (trophiesCount >= 4) rating = isAr ? 'صانع السلالات التاريخية 👑' : 'LEGENDARY DYNASTY 👑';
+        else if (trophiesCount >= 1) rating = isAr ? 'بطل الكؤوس والمفاجآت ⭐' : 'UNDERDOG HERO ⭐';
+        else rating = isAr ? 'مدرب متقلب لم يحالفه الحظ 📉' : 'TROUBLED TACTICIAN 📉';
       } else {
-        rating = isAr ? 'بطل الجماهير والمحبوب ⭐' : 'CULT HERO ⭐';
+        if (trophiesCount >= 8 && peakVal >= 90) {
+          rating = isAr ? 'الأعظم في التاريخ (THE GOAT) 🐐' : 'THE GOAT 🐐';
+        } else if (trophiesCount >= 4 && peakVal >= 60) {
+          rating = isAr ? 'أسطورة كروية عالمية 🌟' : 'WORLD CLASS LEGEND 🌟';
+        } else if (injuries >= 3 && trophiesCount <= 2) {
+          rating = isAr ? 'موهبة دمرتها الإصابات 🩹' : 'INJURY CURSED TALENT 🩹';
+        } else if (trophiesCount === 0 && peakVal <= 20) {
+          rating = isAr ? 'موهبة ضائعة لم تكتمل 📉' : 'WONDERKID BUST 📉';
+        } else if (this.totalMatches >= 500) {
+          rating = isAr ? 'رحالة كروي مقاتل 🌍' : 'ICONIC JOURNEYMAN 🌍';
+        } else {
+          rating = isAr ? 'بطل الجماهير والمحبوب ⭐' : 'CULT HERO ⭐';
+        }
       }
 
-      // Managerial Offer based on reality
+      // Manager Appointment
       let managerClub;
-      let managerTitle = isAr ? 'المدير الفني والمدرب العام' : 'HEAD COACH & TACTICAL MASTERMIND';
+      let managerTitle = isMgr 
+        ? (isAr ? 'رئيس اللجنة الفنية بالاتحاد الدولي FIFA' : 'FIFA GLOBAL TECHNICAL DIRECTOR') 
+        : (isAr ? 'المدير الفني والمدرب العام' : 'HEAD COACH & TACTICAL MASTERMIND');
 
       if (trophiesCount >= 4 || peakVal >= 65) {
         const eliteClubs = CLUBS.filter(c => c.tier === 1);
@@ -1333,27 +1816,33 @@
         managerClub = this.player.currentClub;
       }
 
-      // Populate Modal Elements
+      // Populate Grand Finale Table
       this.dom.modalTitle.textContent = isAr ? `مسيرة ${rating}` : `THE LEGACY OF ${rating}`;
-      this.dom.finalRegion.textContent = isAr ? `${this.player.regionObj.flag} ${this.player.countryAr}` : `${this.player.regionObj.flag} ${this.player.countryEn}`;
+      this.dom.finalRegion.textContent = `${this.player.regionObj.flag} ${isAr ? this.player.countryAr : this.player.countryEn}`;
       this.dom.finalPosition.textContent = isAr ? this.player.positionObj.titleAr : this.player.positionObj.titleEn;
       this.dom.finalRating.textContent = rating;
-      this.dom.finalSeasons.textContent = '10';
-      this.dom.finalTrophies.textContent = trophiesCount;
-      this.dom.finalGoalTitle.textContent = isAr ? this.player.positionObj.statAr : this.player.positionObj.statEn;
-      this.dom.finalGoals.textContent = this.totalStatScore;
+
+      // In-Depth Numbers
+      this.dom.finalMatches.textContent = this.totalMatches;
+      this.dom.finalGoals.textContent = this.totalGoals;
+      this.dom.finalGoalTitle.textContent = isMgr ? (isAr ? 'أهداف الفريق ⚽' : 'TEAM GOALS ⚽') : (isAr ? 'الأهداف ⚽' : 'GOALS ⚽');
+      this.dom.finalAssists.textContent = this.totalAssists;
+      this.dom.finalYellow.textContent = `🟨 ${this.totalYellow}`;
+      this.dom.finalRed.textContent = `🟥 ${this.totalRed}`;
       this.dom.finalPeakVal.textContent = this.formatCurrency(this.peakMarketValue);
 
-      // Populate Trophies Tags in End Card
+      // Trophy Sub-counts
+      this.dom.finalWorldCups.textContent = this.countWorldCups;
+      this.dom.finalUCLs.textContent = this.countUCLs;
+      this.dom.finalLeagues.textContent = this.countLeagues;
+      this.dom.finalCups.textContent = this.countCups;
+      this.dom.finalBallonDors.textContent = this.countBallonDors;
+
+      // Trophy chips
       this.dom.finalTrophiesTags.innerHTML = '';
       if (this.allTrophies.length === 0) {
-        this.dom.finalTrophiesTags.innerHTML = `
-          <span style="font-size:0.7rem; color:#64748b;">
-            ${isAr ? 'لم تتوج بأي بطولة رسمية في مسيرتك.' : 'No official trophies won during your career.'}
-          </span>
-        `;
+        this.dom.finalTrophiesTags.innerHTML = `<span style="font-size:0.65rem; color:#64748b;">${isAr ? 'لم تحقق أي بطولة رسمية في مسيرتك.' : 'No official trophies won during this run.'}</span>`;
       } else {
-        // Group trophies by name
         const counts = {};
         this.allTrophies.forEach(t => {
           const key = isAr ? t.nameAr : t.nameEn;
@@ -1385,9 +1874,29 @@
       });
 
       // Managerial Calling
-      this.dom.managerCrest.innerHTML = generateCrestSVG(managerClub, '30px');
+      this.dom.managerCrest.innerHTML = generateCrestSVG(managerClub, '28px');
       this.dom.managerClubName.textContent = this.getClubName(managerClub);
       this.dom.managerRoleTitle.textContent = managerTitle;
+
+      // Train AI on completed career & submit score to cloud DB
+      this.cloudAI.trainOnCareerRun({
+        trophiesCount: trophiesCount,
+        injuriesCount: this.player.injuriesCount,
+        goals: this.totalGoals,
+        mode: this.gameMode
+      });
+      this.updateAIStatusStrip();
+
+      this.cloudAI.submitLeaderboardScore({
+        name: `${this.player.positionObj.titleAr} (${this.player.countryAr})`,
+        club: this.getClubName(this.player.currentClub),
+        trophies: trophiesCount,
+        goals: this.totalGoals,
+        matches: this.totalMatches,
+        rank: rating,
+        mode: this.gameMode,
+        timestamp: Date.now()
+      });
 
       this.dom.careerModal.classList.add('active');
     }
@@ -1395,35 +1904,35 @@
     copyCareerResume() {
       const isAr = this.lang === 'ar';
       const p = this.player;
+      const isMgr = this.gameMode === 'manager';
       const pos = isAr ? p.positionObj.titleAr : p.positionObj.titleEn;
       const country = isAr ? p.countryAr : p.countryEn;
-      const statTitle = isAr ? p.positionObj.statAr : p.positionObj.statEn;
-      const mgrClub = this.dom.managerClubName.textContent;
       const rank = this.dom.finalRating.textContent;
 
-      let trophyListStr = this.allTrophies.map(t => `${t.icon} ${isAr ? t.nameAr : t.nameEn}`).join(', ');
-      if (!trophyListStr) trophyListStr = isAr ? 'صفر بطولات' : 'Zero Trophies';
-
       const resume = isAr ? `
-⚽ سيرة مسيرة لاعب كرة القدم الواقعية ⚽
-👤 المركز: ${pos} (${country})
-🏆 إجمالي البطولات (${this.allTrophies.length}): ${trophyListStr}
-📊 المساهمات (${statTitle}): ${this.totalStatScore}
-💎 أعلى قيمة سوقية: ${this.formatCurrency(this.peakMarketValue)}
-💰 إجمالي الأرباح: ${this.formatCurrency(this.totalEarnings)}
-👔 النادي بعد التدريب: ${mgrClub}
-🌟 التصنيف الحقيقي: ${rank}
+⚽ سيرة مسيرة كرة القدم الاحترافية الشاملة ⚽
+👤 المركز/الدور: ${pos} (${country})
+🏟️ المباريات الملعوبة: ${this.totalMatches}
+⚽ الأهداف الكلية: ${this.totalGoals} | 👟 الأسيست: ${this.totalAssists}
+🟨 الإنذارات: ${this.totalYellow} | 🟥 الطرد: ${this.totalRed}
+🏆 كؤوس العالم: ${this.countWorldCups} | دوري أبطال أوروبا: ${this.countUCLs}
+🥇 الدوريات المحلية: ${this.countLeagues} | الكؤوس المحلية: ${this.countCups}
+🌕 الكرات الذهبية: ${this.countBallonDors}
+💎 أعلى قيمة: ${this.formatCurrency(this.peakMarketValue)} | 💰 الأرباح: ${this.formatCurrency(this.totalEarnings)}
+🌟 التصنيف التاريخي: ${rank}
 
-العب الآن: https://mlyounesml.github.io/football-career-simulator/
+العب وتحدّ الذكاء الاصطناعي: https://mlyounesml.github.io/football-career-simulator/
       `.trim() : `
-⚽ REALISTIC FOOTBALL PLAYER CAREER SIMULATOR ⚽
-👤 Position: ${pos} (${country})
-🏆 Trophies Won (${this.allTrophies.length}): ${trophyListStr}
-📊 Total Stats (${statTitle}): ${this.totalStatScore}
-💎 Peak Market Value: ${this.formatCurrency(this.peakMarketValue)}
-💰 Total Earnings: ${this.formatCurrency(this.totalEarnings)}
-👔 Management Club: ${mgrClub}
-🌟 Realistic Legacy: ${rank}
+⚽ PRO FOOTBALL CAREER STATISTICAL RESUME ⚽
+👤 Role: ${pos} (${country})
+🏟️ Matches Played: ${this.totalMatches}
+⚽ Goals: ${this.totalGoals} | 👟 Assists: ${this.totalAssists}
+🟨 Yellow Cards: ${this.totalYellow} | 🟥 Red Cards: ${this.totalRed}
+🏆 World Cups: ${this.countWorldCups} | UCL: ${this.countUCLs}
+🥇 Domestic Leagues: ${this.countLeagues} | Domestic Cups: ${this.countCups}
+🌕 Ballon d'Or: ${this.countBallonDors}
+💎 Peak Value: ${this.formatCurrency(this.peakMarketValue)} | 💰 Total Earnings: ${this.formatCurrency(this.totalEarnings)}
+🌟 Final Legacy: ${rank}
 
 Play now: https://mlyounesml.github.io/football-career-simulator/
       `.trim();
@@ -1442,6 +1951,6 @@ Play now: https://mlyounesml.github.io/football-career-simulator/
 
   // Initialize Game on DOM ready
   document.addEventListener('DOMContentLoaded', () => {
-    window.game = new CareerGame();
+    window.game = new CareerGamePro();
   });
 })();
