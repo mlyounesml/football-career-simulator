@@ -12,6 +12,8 @@
   --text-gray: #475569;
   --mint-green: #059669;
   --neon-green: #10b981;
+  --danger-red: #ef4444;
+  --warning-orange: #f97316;
   --font-arabic: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Montserrat', 'Cairo', sans-serif;
   --box-shadow-pop: 0 8px 20px -4px rgba(0, 0, 0, 0.45);
@@ -54,7 +56,7 @@ body {
   background: var(--primary-yellow);
 }
 
-/* Floating Controls Bar (Language & Audio) */
+/* Floating Controls Bar (Trophy Cabinet, Language & Audio) */
 .top-floating-controls {
   position: fixed;
   top: 12px;
@@ -88,12 +90,40 @@ html[dir="rtl"] .top-floating-controls {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 0.92rem;
+  position: relative;
 }
 
 .control-btn:hover {
   transform: scale(1.08);
   background: rgba(255, 255, 255, 0.3);
   border-color: var(--primary-yellow);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.btn-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--primary-yellow);
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 900;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #000;
+}
+
+html[dir="rtl"] .btn-badge {
+  right: auto;
+  left: -4px;
 }
 
 /* App Viewport & Filter Frame */
@@ -231,14 +261,14 @@ html[dir="rtl"] .top-floating-controls {
   transform: rotate(45deg);
 }
 
-/* FILTER STAGE LAYOUT (MAIN TWO-COLUMN WORKHORSE) */
+/* FILTER STAGE LAYOUT (TWO PARALLEL COLUMNS) */
 .filter-stage {
   display: flex;
   justify-content: space-between;
   padding: 8px 10px;
   gap: 10px;
   flex: 1;
-  min-height: 0; /* Crucial for internal scrolling */
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -266,7 +296,6 @@ html[dir="rtl"] .top-floating-controls {
   transition: all 0.2s ease;
 }
 
-/* Age number block */
 .age-pill {
   width: 30px;
   height: 27px;
@@ -285,7 +314,6 @@ html[dir="rtl"] .top-floating-controls {
   transition: all 0.2s;
 }
 
-/* Connected Club Badge + Name Slot */
 .ladder-club-slot {
   flex: 1;
   height: 27px;
@@ -320,7 +348,6 @@ html[dir="rtl"] .top-floating-controls {
   max-width: 76px;
 }
 
-/* Active Age Row State */
 .ladder-row.active .age-pill {
   background: var(--primary-yellow);
   color: #000;
@@ -341,7 +368,6 @@ html[dir="rtl"] .top-floating-controls {
   font-weight: 900;
 }
 
-/* Completed Age Row State */
 .ladder-row.completed .age-pill {
   background: rgba(255, 255, 255, 0.35);
   color: rgba(255, 255, 255, 0.75);
@@ -356,7 +382,6 @@ html[dir="rtl"] .top-floating-controls {
   color: #ffffff;
 }
 
-/* Special Rows (Retirement & Management) */
 .ladder-row.special-row {
   position: relative;
 }
@@ -391,7 +416,7 @@ html[dir="rtl"] .top-floating-controls {
   box-shadow: 0 0 12px rgba(250, 204, 21, 0.9);
 }
 
-/* RIGHT COLUMN: UPPER PROFILE HUD + LOWER EVENT STAGE */
+/* RIGHT COLUMN: MAIN CONTENT */
 .main-content-column {
   flex: 1;
   min-width: 0;
@@ -448,6 +473,17 @@ html[dir="rtl"] .top-floating-controls {
   overflow: hidden;
 }
 
+.val-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.val-trend {
+  font-size: 0.85rem;
+}
+
 .hud-pill .hud-value {
   color: #0f172a;
   font-family: var(--font-arabic);
@@ -465,7 +501,6 @@ html[dir="rtl"] .top-floating-controls {
   color: #047857;
 }
 
-/* AGE CARD */
 .hud-pill.age-card {
   border-color: var(--neon-magenta);
 }
@@ -493,7 +528,6 @@ html[dir="rtl"] .top-floating-controls {
   padding: 0 8px;
 }
 
-/* CURRENT TEAM CARD */
 .current-team-card {
   width: 100%;
   background: #ffffff;
@@ -557,7 +591,6 @@ html[dir="rtl"] .top-floating-controls {
   flex-shrink: 0;
 }
 
-/* CREST / BADGE CONTAINER */
 .crest-container {
   width: 24px;
   height: 24px;
@@ -580,7 +613,7 @@ html[dir="rtl"] .top-floating-controls {
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
 }
 
-/* LOWER DECISION EVENT STAGE (Directly below Profile HUD!) */
+/* LOWER DECISION EVENT STAGE */
 .event-stage {
   display: flex;
   flex-direction: column;
@@ -591,7 +624,6 @@ html[dir="rtl"] .top-floating-controls {
   width: 100%;
 }
 
-/* Event Badge Pill */
 .event-badge-pill {
   background: var(--neon-green);
   color: #ffffff;
@@ -617,7 +649,6 @@ html[dir="rtl"] .top-floating-controls {
   letter-spacing: 0.2px;
 }
 
-/* Narrative Dialogue Box */
 .narrative-box {
   background: #ffffff;
   color: #000;
@@ -637,7 +668,6 @@ html[dir="rtl"] .top-floating-controls {
   color: #0f172a;
 }
 
-/* OFFERS GRID (Multiple Clubs to choose from) */
 .offers-grid {
   width: 100%;
   display: flex;
@@ -645,7 +675,6 @@ html[dir="rtl"] .top-floating-controls {
   gap: 5px;
 }
 
-/* Offer Card */
 .offer-card {
   background: #ffffff;
   color: #0f172a;
@@ -736,7 +765,6 @@ html[dir="rtl"] .offer-right {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
-/* ACTION BAR (STAY BUTTON) */
 .action-bar {
   width: 100%;
   display: flex;
@@ -787,6 +815,17 @@ html[dir="rtl"] .offer-right {
   align-items: center;
 }
 
+.stats-counter.clickable {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.stats-counter.clickable:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .ribbon-label {
   font-size: 0.55rem;
   font-weight: 800;
@@ -801,7 +840,322 @@ html[dir="rtl"] .offer-right {
   color: var(--accent-yellow);
 }
 
-/* CAREER MODAL OVERLAY */
+/* ==========================================
+   SEASON RECAP MODAL (Between Milestones)
+   ========================================== */
+.season-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 7, 15, 0.94);
+  backdrop-filter: blur(12px);
+  z-index: 140;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.season-modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.season-modal-content {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.season-header {
+  text-align: center;
+}
+
+.season-year-badge {
+  background: #3b82f6;
+  color: #fff;
+  font-family: var(--font-arabic);
+  font-size: 0.7rem;
+  font-weight: 900;
+  padding: 2px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.season-header h3 {
+  font-family: var(--font-arabic);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.recap-card {
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 3px solid var(--primary-purple);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recap-event-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border-left: 4px solid var(--primary-purple);
+}
+
+html[dir="rtl"] .recap-event-banner {
+  border-left: none;
+  border-right: 4px solid var(--primary-purple);
+}
+
+.recap-event-banner.success {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.recap-event-banner.injury {
+  background: #fef2f2;
+  border-color: var(--danger-red);
+}
+
+.recap-event-banner.warning {
+  background: #fff7ed;
+  border-color: var(--warning-orange);
+}
+
+.recap-event-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.recap-event-desc h4 {
+  font-family: var(--font-arabic);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.recap-event-desc p {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.recap-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  text-align: center;
+}
+
+.recap-stat-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.recap-stat-val {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--primary-purple);
+}
+
+.recap-stat-val.highlight {
+  color: var(--mint-green);
+}
+
+.recap-stat-val.negative {
+  color: var(--danger-red);
+}
+
+.recap-stat-lbl {
+  font-family: var(--font-arabic);
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.recap-trophies-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: 1px dashed #cbd5e1;
+}
+
+.recap-trophies-section h5 {
+  font-family: var(--font-arabic);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.recap-trophies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trophy-item-pill {
+  background: #fef08a;
+  color: #854d0e;
+  border: 1px solid #facc15;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: var(--font-arabic);
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.no-trophy-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* ==========================================
+   TROPHY CABINET MODAL
+   ========================================== */
+.cabinet-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 7, 15, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 160;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+}
+
+.cabinet-modal-overlay.active {
+  display: flex;
+}
+
+.cabinet-modal-content {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  border: 3px solid var(--badge-gold);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cabinet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+.cabinet-header h3 {
+  font-family: var(--font-arabic);
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.close-btn {
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.cabinet-body {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+.cabinet-trophy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 6px 8px;
+}
+
+.cabinet-trophy-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.cabinet-trophy-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cabinet-trophy-name {
+  font-family: var(--font-arabic);
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.cabinet-trophy-details {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.empty-cabinet-text {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
+  padding: 16px 0;
+}
+
+/* ==========================================
+   FINAL CAREER SUMMARY MODAL
+   ========================================== */
 .career-modal-overlay {
   position: absolute;
   top: 0;
@@ -866,7 +1220,6 @@ html[dir="rtl"] .offer-right {
   color: #94a3b8;
 }
 
-/* FINAL PLAYER CARD */
 .final-player-card {
   background: #ffffff;
   color: var(--text-dark);
@@ -932,6 +1285,46 @@ html[dir="rtl"] .offer-right {
   color: #64748b;
 }
 
+.final-trophies-cabinet {
+  text-align: right;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 7px;
+  padding: 6px 8px;
+}
+
+html[dir="ltr"] .final-trophies-cabinet {
+  text-align: left;
+}
+
+.final-trophies-cabinet h4 {
+  font-family: var(--font-arabic);
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: #854d0e;
+  margin-bottom: 4px;
+}
+
+.final-trophies-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.final-trophy-chip {
+  background: #ffffff;
+  border: 1px solid #facc15;
+  color: #713f12;
+  font-family: var(--font-arabic);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
 .career-clubs-path {
   text-align: right;
   background: #f8fafc;
@@ -972,7 +1365,6 @@ html[dir="ltr"] .career-clubs-path {
   white-space: nowrap;
 }
 
-/* MANAGEMENT REVEAL SECTION */
 .management-reveal {
   background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
   color: #fff;
@@ -1017,7 +1409,6 @@ html[dir="ltr"] .manager-info {
   color: #cbd5e1;
 }
 
-/* MODAL ACTION BUTTONS */
 .modal-actions {
   display: flex;
   flex-direction: column;
@@ -1060,7 +1451,6 @@ html[dir="ltr"] .manager-info {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* CONFETTI CANVAS */
 #confettiCanvas {
   position: fixed;
   top: 0;
@@ -1071,7 +1461,7 @@ html[dir="ltr"] .manager-info {
   z-index: 200;
 }
 
-/* RESPONSIVE DESIGN & ADAPTATION FOR ALL DEVICES */
+/* RESPONSIVE DESIGN */
 @media (max-width: 480px) {
   .app-viewport {
     padding: 0;
@@ -1107,20 +1497,5 @@ html[dir="ltr"] .manager-info {
   .slot-name {
     font-size: 0.58rem;
     max-width: 60px;
-  }
-}
-
-@media (max-width: 360px) {
-  .timeline-sidebar {
-    width: 110px;
-  }
-  .slot-name {
-    max-width: 48px;
-  }
-  .hud-pill .hud-value {
-    font-size: 0.72rem;
-  }
-  .team-card-name {
-    font-size: 0.75rem;
   }
 }
