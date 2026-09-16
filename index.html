@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>محاكي مسيرة لاعب كرة القدم | Football Career Simulator</title>
   
-  <!-- Modern Arabic & Sports Fonts -->
+  <!-- Modern Arabic & Sports Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2.1" />
 </head>
 <body>
   <!-- Ambient Audio & Language Controls -->
@@ -48,13 +51,12 @@
         </div>
       </header>
 
-      <!-- Main Filter Interactive Canvas Area -->
+      <!-- Main Stage: Two Columns (Left = Age Ladder, Right = Profile HUD + Event Stage) -->
       <main class="filter-stage">
         
-        <!-- Timeline Ladder with Age + Club Badge & Name -->
+        <!-- Left Column: Timeline Ladder with Age + Club Slot -->
         <aside class="timeline-sidebar">
           <div class="timeline-ladder" id="timelineLadder">
-            <!-- Age Milestones with Club Badge Slot -->
             <div class="ladder-row" data-age="18">
               <div class="age-pill">18</div>
               <div class="ladder-club-slot" id="slot-18">
@@ -141,79 +143,84 @@
           </div>
         </aside>
 
-        <!-- Right / Upper Profile Stats HUD -->
-        <section class="profile-hud">
-          <!-- Nationality / Region Pill -->
-          <div class="hud-pill purple-card" id="hudRegionCard">
-            <div class="hud-icon">🌐</div>
-            <div class="hud-content">
-              <span class="hud-value" id="playerRegion">أمريكا الجنوبية</span>
-            </div>
-          </div>
-
-          <!-- Position Pill -->
-          <div class="hud-pill purple-card" id="hudPositionCard">
-            <div class="hud-icon">⚽</div>
-            <div class="hud-content">
-              <span class="hud-value" id="playerPosition">مهاجم</span>
-            </div>
-          </div>
-
-          <!-- Age Pill -->
-          <div class="hud-pill age-card" id="hudAgeCard">
-            <div class="hud-label-tag" id="ageLabelText">العمر</div>
-            <div class="hud-age-number" id="playerAge">18</div>
-          </div>
-
-          <!-- Market Value Pill -->
-          <div class="hud-pill purple-card" id="hudValueCard">
-            <div class="hud-icon">💶</div>
-            <div class="hud-content">
-              <span class="hud-value market-val" id="playerValue">€ 1M</span>
-            </div>
-          </div>
-
-          <!-- Current Team Banner Card -->
-          <div class="current-team-card" id="hudCurrentTeamCard">
-            <div class="team-card-header" id="currentTeamTitle">الفريق الحالي</div>
-            <div class="team-card-body">
-              <div class="crest-container large" id="currentTeamCrest"></div>
-              <div class="team-card-info">
-                <span class="team-card-name" id="currentTeamName">جينك</span>
-                <span class="team-card-country" id="currentTeamCountry">بلجيكا</span>
+        <!-- Right Column: Upper Profile HUD + Lower Decision Event Stage -->
+        <div class="main-content-column">
+          
+          <!-- Upper Profile Stats HUD -->
+          <section class="profile-hud">
+            <!-- Region Pill -->
+            <div class="hud-pill purple-card" id="hudRegionCard">
+              <div class="hud-icon">🌐</div>
+              <div class="hud-content">
+                <span class="hud-value" id="playerRegion">أمريكا الجنوبية</span>
               </div>
-              <div class="team-card-badge" id="currentSeasonBadge">2024 م1</div>
             </div>
-          </div>
-        </section>
+
+            <!-- Position Pill -->
+            <div class="hud-pill purple-card" id="hudPositionCard">
+              <div class="hud-icon">⚽</div>
+              <div class="hud-content">
+                <span class="hud-value" id="playerPosition">مهاجم</span>
+              </div>
+            </div>
+
+            <!-- Age Pill -->
+            <div class="hud-pill age-card" id="hudAgeCard">
+              <div class="hud-label-tag" id="ageLabelText">العمر</div>
+              <div class="hud-age-number" id="playerAge">18</div>
+            </div>
+
+            <!-- Market Value Pill -->
+            <div class="hud-pill purple-card" id="hudValueCard">
+              <div class="hud-icon">💶</div>
+              <div class="hud-content">
+                <span class="hud-value market-val" id="playerValue">€ 1.0M</span>
+              </div>
+            </div>
+
+            <!-- Current Team Banner Card -->
+            <div class="current-team-card" id="hudCurrentTeamCard">
+              <div class="team-card-header" id="currentTeamTitle">الفريق الحالي</div>
+              <div class="team-card-body">
+                <div class="crest-container large" id="currentTeamCrest"></div>
+                <div class="team-card-info">
+                  <span class="team-card-name" id="currentTeamName">جينك</span>
+                  <span class="team-card-country" id="currentTeamCountry">بلجيكا</span>
+                </div>
+                <div class="team-card-badge" id="currentSeasonBadge">2024 م1</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Lower Decision Event Stage (Parallel to lower ladder, never cut off!) -->
+          <section class="event-stage" id="eventStage">
+            <!-- Event Category Pill -->
+            <div class="event-badge-pill" id="eventBadgePill">
+              <span class="event-badge-icon">⚽</span>
+              <span class="event-badge-text" id="eventBadgeText">أندية مهتمة بالتعاقد معك</span>
+            </div>
+
+            <!-- Narrative Prompt Card -->
+            <div class="narrative-box" id="narrativeBox">
+              <p id="narrativeText">صراع انتقالات حماسي بين عدة أندية تتنافس لضمك وتقديم عروض رسمية!</p>
+            </div>
+
+            <!-- Offers Container: Multiple Club Options to Choose From -->
+            <div class="offers-grid" id="offersGrid">
+              <!-- Dynamic Offer Cards -->
+            </div>
+
+            <!-- Action Control Buttons Bar (Stay Option) -->
+            <div class="action-bar" id="actionBar">
+              <button class="stay-btn" id="stayBtn">
+                <span>🛡️ البقاء مع <strong id="stayClubName">جينك</strong></span>
+              </button>
+            </div>
+          </section>
+
+        </div> <!-- .main-content-column -->
 
       </main>
-
-      <!-- Center-Bottom: Active Event & Decision Stage -->
-      <section class="event-stage" id="eventStage">
-        <!-- Event Category Pill -->
-        <div class="event-badge-pill" id="eventBadgePill">
-          <span class="event-badge-icon">⚽</span>
-          <span class="event-badge-text" id="eventBadgeText">أندية مهتمة بالتعاقد معك</span>
-        </div>
-
-        <!-- Narrative Prompt Card -->
-        <div class="narrative-box" id="narrativeBox">
-          <p id="narrativeText">صراع انتقالات حماسي بين عدة أندية تتنافس لضمك وتقديم عروض رسمية!</p>
-        </div>
-
-        <!-- Offers Container: Multiple Club Options to Choose From -->
-        <div class="offers-grid" id="offersGrid">
-          <!-- Dynamic Offer Cards with multiple clubs to choose from -->
-        </div>
-
-        <!-- Action Control Buttons Bar (Stay Option) -->
-        <div class="action-bar" id="actionBar">
-          <button class="stay-btn" id="stayBtn">
-            <span>🛡️ البقاء وتجديد العقد مع <strong id="stayClubName">جينك</strong></span>
-          </button>
-        </div>
-      </section>
 
       <!-- Bottom Trophy & Quick Stats Ribbon -->
       <footer class="bottom-ribbon">
@@ -308,6 +315,6 @@
   <!-- Canvas for Confetti -->
   <canvas id="confettiCanvas"></canvas>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2.1"></script>
 </body>
 </html>
