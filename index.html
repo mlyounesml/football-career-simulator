@@ -1,18 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Football Player Career Simulator</title>
+  <title>محاكي مسيرة لاعب كرة القدم | Football Career Simulator</title>
+  
+  <!-- Modern Arabic & Sports Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@700;800;900&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Ambient Audio Controls -->
-  <div class="audio-control" id="audioToggleBtn" title="Toggle Sound Effects">
-    <span id="audioIcon">🔊</span>
+  <!-- Ambient Audio & Language Controls -->
+  <div class="top-floating-controls">
+    <button class="control-btn" id="langToggleBtn" title="تغيير اللغة / Switch Language">
+      <span id="langLabel">EN</span>
+    </button>
+    <button class="control-btn" id="audioToggleBtn" title="تشغيل / كتم الصوت">
+      <span id="audioIcon">🔊</span>
+    </button>
   </div>
 
   <div class="app-viewport">
@@ -26,42 +34,109 @@
           <div class="mini-club-card" id="headerMiniClub">
             <div class="crest-container" id="miniCrest"></div>
             <div class="mini-club-info">
-              <span class="mini-club-name" id="miniClubName">GENK</span>
-              <span class="mini-club-country" id="miniClubCountry">BELGIUM</span>
+              <span class="mini-club-name" id="miniClubName">جينك</span>
+              <span class="mini-club-country" id="miniClubCountry">بلجيكا</span>
             </div>
-            <div class="mini-season-tag" id="miniSeasonTag">2024 S1</div>
+            <div class="mini-season-tag" id="miniSeasonTag">2024 م1</div>
           </div>
         </div>
 
         <div class="version-pill">v1.2.1</div>
 
         <div class="top-right-actions">
-          <button class="icon-btn" id="restartGameBtn" title="New Career">🔄</button>
+          <button class="icon-btn" id="restartGameBtn" title="بدء مسيرة جديدة">🔄</button>
         </div>
       </header>
 
       <!-- Main Filter Interactive Canvas Area -->
       <main class="filter-stage">
         
-        <!-- Left: Age Milestone Timeline Ladder -->
+        <!-- Timeline Ladder with Age + Club Badge & Name -->
         <aside class="timeline-sidebar">
           <div class="timeline-ladder" id="timelineLadder">
-            <div class="ladder-step" data-age="18"><span class="step-num">18</span></div>
-            <div class="ladder-step" data-age="20"><span class="step-num">20</span></div>
-            <div class="ladder-step" data-age="22"><span class="step-num">22</span></div>
-            <div class="ladder-step" data-age="24"><span class="step-num">24</span></div>
-            <div class="ladder-step" data-age="26"><span class="step-num">26</span></div>
-            <div class="ladder-step" data-age="28"><span class="step-num">28</span></div>
-            <div class="ladder-step" data-age="30"><span class="step-num">30</span></div>
-            <div class="ladder-step" data-age="32"><span class="step-num">32</span></div>
-            <div class="ladder-step" data-age="34"><span class="step-num">34</span></div>
-            <div class="ladder-step special-step" data-age="R">
-              <span class="step-num letter-r">R</span>
-              <span class="special-label">RETIRING</span>
+            <!-- Age Milestones with Club Badge Slot -->
+            <div class="ladder-row" data-age="18">
+              <div class="age-pill">18</div>
+              <div class="ladder-club-slot" id="slot-18">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
             </div>
-            <div class="ladder-step special-step" data-age="M">
-              <span class="step-num letter-m">M</span>
-              <span class="special-label">MANAGEMENT</span>
+
+            <div class="ladder-row" data-age="20">
+              <div class="age-pill">20</div>
+              <div class="ladder-club-slot" id="slot-20">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="22">
+              <div class="age-pill">22</div>
+              <div class="ladder-club-slot" id="slot-22">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="24">
+              <div class="age-pill">24</div>
+              <div class="ladder-club-slot" id="slot-24">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="26">
+              <div class="age-pill">26</div>
+              <div class="ladder-club-slot" id="slot-26">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="28">
+              <div class="age-pill">28</div>
+              <div class="ladder-club-slot" id="slot-28">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="30">
+              <div class="age-pill">30</div>
+              <div class="ladder-club-slot" id="slot-30">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="32">
+              <div class="age-pill">32</div>
+              <div class="ladder-club-slot" id="slot-32">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <div class="ladder-row" data-age="34">
+              <div class="age-pill">34</div>
+              <div class="ladder-club-slot" id="slot-34">
+                <div class="slot-crest"></div>
+                <span class="slot-name">---</span>
+              </div>
+            </div>
+
+            <!-- Special Step: Retirement -->
+            <div class="ladder-row special-row" data-age="R">
+              <div class="age-pill special-letter letter-r">R</div>
+              <div class="special-badge-tag" id="retireLabelTag">اعتزال</div>
+            </div>
+
+            <!-- Special Step: Management -->
+            <div class="ladder-row special-row" data-age="M">
+              <div class="age-pill special-letter letter-m">M</div>
+              <div class="special-badge-tag" id="manageLabelTag">تدريب</div>
             </div>
           </div>
         </aside>
@@ -72,7 +147,7 @@
           <div class="hud-pill purple-card" id="hudRegionCard">
             <div class="hud-icon">🌐</div>
             <div class="hud-content">
-              <span class="hud-value" id="playerRegion">SOUTH AMERICA</span>
+              <span class="hud-value" id="playerRegion">أمريكا الجنوبية</span>
             </div>
           </div>
 
@@ -80,13 +155,13 @@
           <div class="hud-pill purple-card" id="hudPositionCard">
             <div class="hud-icon">⚽</div>
             <div class="hud-content">
-              <span class="hud-value" id="playerPosition">STRIKER</span>
+              <span class="hud-value" id="playerPosition">مهاجم</span>
             </div>
           </div>
 
           <!-- Age Pill -->
           <div class="hud-pill age-card" id="hudAgeCard">
-            <div class="hud-label-tag">AGE</div>
+            <div class="hud-label-tag" id="ageLabelText">العمر</div>
             <div class="hud-age-number" id="playerAge">18</div>
           </div>
 
@@ -100,14 +175,14 @@
 
           <!-- Current Team Banner Card -->
           <div class="current-team-card" id="hudCurrentTeamCard">
-            <div class="team-card-header">CURRENT TEAM</div>
+            <div class="team-card-header" id="currentTeamTitle">الفريق الحالي</div>
             <div class="team-card-body">
               <div class="crest-container large" id="currentTeamCrest"></div>
               <div class="team-card-info">
-                <span class="team-card-name" id="currentTeamName">GENK</span>
-                <span class="team-card-country" id="currentTeamCountry">BELGIUM</span>
+                <span class="team-card-name" id="currentTeamName">جينك</span>
+                <span class="team-card-country" id="currentTeamCountry">بلجيكا</span>
               </div>
-              <div class="team-card-badge" id="currentSeasonBadge">2024 S1</div>
+              <div class="team-card-badge" id="currentSeasonBadge">2024 م1</div>
             </div>
           </div>
         </section>
@@ -119,23 +194,23 @@
         <!-- Event Category Pill -->
         <div class="event-badge-pill" id="eventBadgePill">
           <span class="event-badge-icon">⚽</span>
-          <span class="event-badge-text" id="eventBadgeText">2 CLUBS INTERESTED</span>
+          <span class="event-badge-text" id="eventBadgeText">أندية مهتمة بالتعاقد معك</span>
         </div>
 
         <!-- Narrative Prompt Card -->
         <div class="narrative-box" id="narrativeBox">
-          <p id="narrativeText">TWO TEAMS ARE CREATING A THRILLING TRANSFER SHOWDOWN BY COMPETING FOR YOUR TALENT!</p>
+          <p id="narrativeText">صراع انتقالات حماسي بين عدة أندية تتنافس لضمك وتقديم عروض رسمية!</p>
         </div>
 
-        <!-- Offers Container / Interactive Cards -->
+        <!-- Offers Container: Multiple Club Options to Choose From -->
         <div class="offers-grid" id="offersGrid">
-          <!-- Dynamic Offer Cards will be injected here -->
+          <!-- Dynamic Offer Cards with multiple clubs to choose from -->
         </div>
 
-        <!-- Action Control Buttons Bar -->
+        <!-- Action Control Buttons Bar (Stay Option) -->
         <div class="action-bar" id="actionBar">
           <button class="stay-btn" id="stayBtn">
-            <span>🛡️ Stay with <strong id="stayClubName">GENK</strong></span>
+            <span>🛡️ البقاء وتجديد العقد مع <strong id="stayClubName">جينك</strong></span>
           </button>
         </div>
       </section>
@@ -143,15 +218,15 @@
       <!-- Bottom Trophy & Quick Stats Ribbon -->
       <footer class="bottom-ribbon">
         <div class="stats-counter">
-          <span class="ribbon-label">TROPHIES</span>
+          <span class="ribbon-label" id="trophiesLabel">البطولات</span>
           <span class="ribbon-val" id="trophiesCount">🏆 0</span>
         </div>
         <div class="stats-counter">
-          <span class="ribbon-label">GOALS / CS</span>
+          <span class="ribbon-label" id="goalsLabel">الأهداف / المساهمات</span>
           <span class="ribbon-val" id="goalsCount">⚽ 0</span>
         </div>
         <div class="stats-counter">
-          <span class="ribbon-label">CAREER EARNINGS</span>
+          <span class="ribbon-label" id="earningsLabel">إجمالي الأرباح</span>
           <span class="ribbon-val" id="careerEarnings">💰 €0.5M</span>
         </div>
       </footer>
@@ -162,41 +237,41 @@
           <div class="modal-confetti-anchor"></div>
           
           <div class="modal-header">
-            <span class="status-badge" id="modalStatusBadge">CAREER COMPLETED</span>
-            <h2 id="modalTitle">THE LEGACY OF A LEGEND</h2>
-            <p class="modal-subtitle" id="modalSubtitle">A journey through world football history</p>
+            <span class="status-badge" id="modalStatusBadge">نهاية المسيرة الكروية</span>
+            <h2 id="modalTitle">أسطورة كروية خالدة</h2>
+            <p class="modal-subtitle" id="modalSubtitle">رحلة تاريخية حافلة بالإنجازات والبطولات</p>
           </div>
 
           <!-- Player Final Card -->
           <div class="final-player-card">
             <div class="final-badge-row">
-              <span class="final-tag" id="finalRegion">BRAZIL</span>
-              <span class="final-tag" id="finalPosition">STRIKER</span>
-              <span class="final-tag highlight" id="finalRating">GOAT 🐐</span>
+              <span class="final-tag" id="finalRegion">البرازيل</span>
+              <span class="final-tag" id="finalPosition">مهاجم</span>
+              <span class="final-tag highlight" id="finalRating">الأعظم في التاريخ 🐐</span>
             </div>
             
             <div class="career-stat-grid">
               <div class="stat-box">
                 <span class="stat-num" id="finalSeasons">10</span>
-                <span class="stat-title">SEASONS</span>
+                <span class="stat-title" id="finalSeasonsLabel">مواسم</span>
               </div>
               <div class="stat-box">
                 <span class="stat-num" id="finalTrophies">7</span>
-                <span class="stat-title">TROPHIES 🏆</span>
+                <span class="stat-title" id="finalTrophiesLabel">بطولات 🏆</span>
               </div>
               <div class="stat-box">
                 <span class="stat-num" id="finalGoals">248</span>
-                <span class="stat-title" id="finalGoalTitle">CAREER GOALS</span>
+                <span class="stat-title" id="finalGoalTitle">الأهداف الكروية</span>
               </div>
               <div class="stat-box">
                 <span class="stat-num" id="finalPeakVal">€120M</span>
-                <span class="stat-title">PEAK VALUE</span>
+                <span class="stat-title" id="finalPeakLabel">أعلى قيمة سوقية</span>
               </div>
             </div>
 
             <!-- Clubs Timeline Summary -->
             <div class="career-clubs-path">
-              <h4>CLUBS JOURNEY</h4>
+              <h4 id="journeyTitle">مسيرة الأندية</h4>
               <div class="clubs-trail" id="clubsTrail">
                 <!-- Injected club badges -->
               </div>
@@ -204,12 +279,12 @@
 
             <!-- Management Role Post-Retirement -->
             <div class="management-reveal" id="managementReveal">
-              <div class="management-title">MANAGERIAL CALLING</div>
+              <div class="management-title" id="managementTitleText">المسيرة التدريبية بعد الاعتزال 👔</div>
               <div class="manager-club-card" id="managerClubCard">
                 <div class="crest-container large" id="managerCrest"></div>
                 <div class="manager-info">
-                  <h3 id="managerClubName">REAL MADRID</h3>
-                  <p id="managerRoleTitle">HEAD COACH & TACTICAL MASTERMIND</p>
+                  <h3 id="managerClubName">ريال مدريد</h3>
+                  <p id="managerRoleTitle">المدير الفني والمدرب العام</p>
                 </div>
               </div>
             </div>
@@ -218,10 +293,10 @@
           <!-- Modal Action Buttons -->
           <div class="modal-actions">
             <button class="primary-action-btn" id="playAgainBtn">
-              <span>⚡ PLAY NEW CAREER</span>
+              <span id="playAgainText">⚡ بدء مسيرة لاعب جديد</span>
             </button>
             <button class="secondary-action-btn" id="shareCareerBtn">
-              <span>📋 COPY CAREER RESUME</span>
+              <span id="shareCareerText">📋 نسخ السيرة الذاتية للمسيرة</span>
             </button>
           </div>
         </div>
